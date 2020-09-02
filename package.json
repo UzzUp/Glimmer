@@ -1,0 +1,31 @@
+{
+  "name": "glimmer-servlet",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.5.2",
+    "cookie-parser": "^1.4.5",
+    "debug": "~2.6.9",
+    "ejs": "^2.6.2",
+    "express": "~4.16.1",
+    "express-session": "^1.17.1",
+    "http": "0.0.1-security",
+    "http-errors": "~1.6.3",
+    "id": "0.0.0",
+    "less": "^3.12.2",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.4",
+    "session": "^0.1.0",
+    "socket.io": "^2.3.0"
+  },
+  "description": "Glimmer is a game ",
+  "main": "app.js",
+  "devDependencies": {},
+  "author": "The K",
+  "license": "ISC"
+}

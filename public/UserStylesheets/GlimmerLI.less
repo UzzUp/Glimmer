@@ -1,0 +1,147 @@
+
+//登录界面的分配比例
+@RG-BOX : 1;
+@image-size : 0.75;
+@Iframe-open : 1-@image-size;
+@Iframe-close : 0;
+
+//-----------------------标准
+//边框颜色(标准)
+@border_Color : #bcbcbc;
+//动画时间(标准)
+@Anim_Time : 2s;
+
+
+//整体登录盒子
+#Goin-Register{
+	padding: 0px;
+	height: 500px;
+	margin-top:50px;
+	overflow: hidden;
+	border-radius: 15px;
+	border: 2px @border_Color solid;
+	
+	>div{
+		float: left;
+		transition: all 2s;
+	}
+	
+	//轮播图
+	#Image_Show{
+		z-index:1;
+		position: relative;
+		background-color: #ffffff;
+		width: percentage(@image-size);
+		border: 1px @border_Color solid;
+		
+		.NextImage{
+			top: 0px;
+			left: 0px;
+			opacity: 0;		
+			z-index:-1;
+			width: 100%;
+			height: 100%;
+			position:absolute;
+			transition: all @Anim_Time;
+		}
+		
+		/* 显示的轮播图样式 */
+		.ImageShow{
+			opacity: 1;
+			z-index: 20;
+		}
+		// 选择栏样式
+		#Drop_Show{
+			left: 50%;
+			bottom: 20px;
+			width: 100px;
+			height: 20px;
+			z-index: 100;
+			margin-left: -50px;
+			position: absolute;
+			
+			.Drop{
+				float: left;
+				width: 10px;
+				height: 10px;
+				margin-right: 5px;
+				border-radius: 50%;
+				background-color: #ffff7f;
+				transition: all @Anim_Time;
+			}
+			
+			.Drop_Show{
+				border-radius: 0%;
+				background-color: #ffaaff;
+			}
+		}
+	}
+	//注册登录页面
+	.RG{
+		height: 100%;
+		border: none;
+		overflow: hidden;
+		background-color: #ffffff;
+		width: percentage(@Iframe-close);
+		
+		>*{
+			opacity: 0;
+			transition: all @Anim_Time;
+		}
+		
+		//LOGO设置
+		#Logo{
+			width: 200px;
+			height: 200px;
+			margin-left: 5%;
+			margin-bottom: 20px;
+		}
+		
+		.Iframe_Select{
+			width: 100%;
+			height: 10%;
+			cursor: pointer;
+			background-color: #56596f; 
+			border-top: 2px @border_Color solid;
+			
+			
+			//设置切换按钮样式
+			>img{
+				width: 50px;
+				float: left;
+				height: 100%;
+			}
+			>font{
+				size: 5;
+				width: 150px;
+				float: left;
+				height: 100%;
+				color: #00B7FF;
+				display: block;
+				line-height: 200%;
+				text-align: center;
+			}
+		}
+	}
+	
+	//登录注册栏的打开状态
+	.Iopen{
+		border: 1px @border_Color solid;
+		width: percentage(@Iframe-open);
+		
+		>*{
+			opacity: 1;
+			transition: all @Anim_Time;
+		}
+	}
+}
+
+//列表间隔排序
+.Input_List{
+	margin-bottom: 25px;
+}
+
+
+
+
+
