@@ -1,7 +1,6 @@
-	$(document).ready(function() {			
+window.onload=function (){	
       let canvas = document.getElementById("Back");
 			let ctx = canvas.getContext("2d");
-			let c = $("#Back");
 			let w,h;
 			let pi = Math.PI;
 			let all_attribute = {
@@ -71,9 +70,11 @@
 				canvas.width = w;
 				canvas.height = h;
 			}
-			$(window).resize(function(){
+			
+			window.onresize = function(){
 				window_resize();
-			});
+			}
+			
 			function find_random(num_one,num_two){
 				return Math.random()*(num_two-num_one)+num_one;
 			}
@@ -104,4 +105,4 @@
 				}
 			}());
 			start();
-  });
+};

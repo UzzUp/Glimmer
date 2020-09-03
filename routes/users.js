@@ -16,8 +16,7 @@ router.get('/', function(req, res, next) {
 router.get('/AccountTest', function(req, res, next) {	
 	let Mysql_String = `select Username from Userlist WHERE Username='${req.query.Account}'`
 	Database.query(Mysql_String,function(err,rls){
-		
-		//允许该用户名注册
+		// 允许该用户名注册
 		if(rls.length==0){
 			res.send(StateCode.State_Permit)
 		//禁止该用户名注册

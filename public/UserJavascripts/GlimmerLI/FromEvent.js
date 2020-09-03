@@ -1,3 +1,23 @@
+//截取请求
+axios.interceptors.request.use(
+  function(config) {
+		console.log("发送数据")
+		console.log(config)
+		
+    if (config.method === 'get' && config.url != undefined) {
+      if (config.params == undefined) {
+        config.params = {}
+      }
+      config.params.__preventCache = new Date().getTime()
+    }
+    config.withCredentials = true // 允许携带token ,这个是解决跨域产生的相关问题
+    return config
+  },
+  function(error) {
+    return Promise.reject(error)
+  }
+)
+
 //客户端登录请求
 $('#Login_Button').click(function(){
 			//请求登录事件
@@ -6,25 +26,21 @@ $('#Login_Button').click(function(){
 
 //用户名验证请求
 $('#Account_test').blur(function(){
-	$.ajax({
-			method:"GET",
-			url:"users/AccountTest",//路由路径
-			data:{Account:$("#Account_test").val()},
-						
-			success:function(data){
-				if("X000-Y001"==data){
-					//打开提示弹窗
-					Hint("该账户已被注册，请重试！",function(){$('#Account_test').val("")});
-				}else if("X000-Y000"==data){
-					SetSchedule(20)
-				}
-			},
-			
-			error : function(e){
-
-			},
-	});
-	
+		axios({
+				method: 'get',
+				url: '/users/AccountTest?Account='+$("#Account_test").val(),
+		})
+		.then(function (response) {
+			if("X000-Y001"==response.data){
+				//打开提示弹窗
+				Hint("该账户已被注册，请重试！",function(){$('#Account_test').val("")});
+			}else if("X000-Y000"==response.data){
+				SetSchedule(20)
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 })
 
 //其他验证请求
@@ -56,19 +72,12 @@ $('#Sefa_OFF').click(function(){
 //客户端注册请求
 $('#Register_Button').click(function(){
 	if(Schedule_Length==100){
-		$.ajax({//向服务器发出请求的方法
-				method:"post",
-				url:"users/Register",//路由路径
-				data:$('#Register_From').serialize(),
-
-				success:function(data){
-					//请求登录事件
-					Login_Res("Register_From");
-				},
-				
-				error : function(e){
-		
-				},
+		axios.post("users/Register",$('#Register_From').serialize())
+		.then(function (response) {
+			Login_Res("Register_From");
+		})
+		.catch(function (error) {
+			console.log(error);
 		});
 	}else{
 		//打开提示弹窗
@@ -108,32 +117,26 @@ function SetSchedule(Add_Schedule){
 
 //登录请求
 function Login_Res(ElementID){
-	$.ajax({
-				method:"post",
-				url:"users/Login",//路由路径
-				data:$('#'+ElementID).serialize(),
-							
-				success:function(data){
-					let Event = "";//结束事件
-					let Time_Before = "";//时间描述(前)
-					let Time_After = "";//时间描述(后)
-					
-					
-					if("X000-Y001"==data||"X001-Y001"==data){
-							//打开提示弹窗
-							Hint("密码错误或账户不存在!",function(){$('#Login_From')[0].reset()});
-					}else if("X001-Y002"==data){
-							Hint("该用户已经登录!如不是本人操作,请前往安全中心修改密码",function(){});
-					}else{
-							//如果登录成功，则转至具体服务页面
-						  $("body").html(data);
-					}
-				},
-				
-				error : function(e){
-					alert("错误!");
-				},
-		});
+	axios.post("users/Login",$('#'+ElementID).serialize())
+	.then(function (response) {
+		let Event = "";//结束事件
+		let Time_Before = "";//时间描述(前)
+		let Time_After = "";//时间描述(后)
+		
+		
+		if("X000-Y001"==response.data||"X001-Y001"==response.data){
+				//打开提示弹窗
+				Hint("密码错误或账户不存在!",function(){$('#Login_From')[0].reset()});
+		}else if("X001-Y002"==response.data){
+				Hint("该用户已经登录!如不是本人操作,请前往安全中心修改密码",function(){});
+		}else{
+				//如果登录成功，则转至具体服务页面
+			  $("body").html(response.data);
+		}
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
 }
 
 //弹窗提示
