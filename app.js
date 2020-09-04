@@ -29,8 +29,8 @@ app.use(bodyParser.urlencoded({
 //设置session信息
 app.use(session({
     secret: 'XXXXXX',
-    name: 'AppKey',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-    cookie: {maxAge: 80000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    name: 'AppKey', 
+    cookie: {maxAge: 60000 * 10 },  //设置ssesion失效时间
     resave: true,
     saveUninitialized: true
 }));
@@ -52,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 
 //无此文件时的处理(500)
 app.use(function(req, res, next) {

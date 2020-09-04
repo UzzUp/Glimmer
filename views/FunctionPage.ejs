@@ -12,9 +12,9 @@
 		<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css"/>
 		
-		导入窗口插件
-		<link rel="stylesheet" href="./plug/NewLayX/layx.min.css"/>
-		<script type="text/javascript" src="./plug/NewLayX/layx.min.js"></script>
+		<!-- 导入依赖插件 -->
+		<script type="text/javascript" src="./plug/layer/layer.js"></script>
+		<script type="text/javascript" src="./plug/vue.min.js"></script>
 		
 		<!-- 导入自身依赖 -->
 		<link href="./UserStylesheets/FunctionPage.less" rel="stylesheet/less"/>
@@ -43,8 +43,8 @@
 							</label>
 							<img id="Head_Image" src='<%=locals.HeadImage||"./HeadImage/AccountHead.png"%>' style="width: 100%;height: 100%;"/>
 						</div>
-						<font size="3" color="#000000" style="left: 90px;top: 10px;position: absolute;">用户:<%=locals.username||"未知"%></font>
-						<font size="3" color="#000000" style="left: 90px;top: 40px;position: absolute;">昵称:<%=locals.name||"未知"%></font>
+						<font size="3" color="#000000" style="left: 90px;top: 10px;position: absolute;">昵称:<%=(locals.name).length>4?(locals.name).substring(0,3)+"..":locals.name||"未知"%></font>
+						<!-- <font size="3" color="#000000" style="left: 90px;top: 40px;position: absolute;">用户:<%=locals.username||"未知"%></font> -->
 					</div>
 					<div id="Function">
 								<div id="Main_Window" data-select="Main-box" class="Select_Button USB_Border">
@@ -60,7 +60,6 @@
 									<font size="3" color="#03D0FF" style="">游戏列表</font>
 								</div>
 					</div>
-					
 				</div>
 				<div id="Function_Page" class="col-md-8 col-md-offset-1 USB_Border">
 					<!-- 前端主页面 -->
@@ -77,46 +76,9 @@
 			</div>
 		</div>
 		
+		<!-- 放置ejs模板传来的值,供其他js文件使用 -->
 		<script type="text/javascript">
-			//提交头像表单事件
-			$("#HeadFile").get(0).onchange = function () {
-					let thisFile = this.files[0]
-					//保存文件后缀名
-					let suffix = thisFile.name.split(".")[1]
-					
-					//更改图片并且上传至数据库
-					let reader = new FileReader()
-					reader.readAsDataURL(thisFile)/*异步解析，不会立马返回结果*/
-					reader.onload = function(e) {
-						//图片的二进制数据转换成base64的字符串 
-						//常见用于显示页面的一些小图片或图标
-			      let data = e.target.result;
-						$("#Head_Image").attr("src", data);
-			
-						$.ajax({
-								method:"POST",
-								url:"users/headImage",//路由路径
-								data:{ImageData:data,suffix:suffix},
-								
-								success:function(data){
-									//提示更换头像成功
-									layx.notice({
-											title: '消息提示',
-											message: '新的头像保存成功！'
-									});
-								},
-								
-								error : function(e){
-									//提示更换头像失败
-									layx.notice({
-									    title: '错误提示',
-									    type: 'error',
-									    message: '错误！头像设置失败！'
-									});
-								},
-						});
-					}
-			}
+			var UserName = "<%=locals.name%>"//用户的名称
 		</script>
 		<script type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>
 		<!-- 增加背景 -->

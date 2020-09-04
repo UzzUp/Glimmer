@@ -5,7 +5,6 @@ let fs = require('fs');
 //引入数据库文件
 let Database = require('../db/Database.js')
 let StateCode = require('../db/State_Code.js')
-let UserManage = require('../db/UserList.js')
 
 //功能测试区域
 router.get('/', function(req, res, next) {
@@ -113,7 +112,7 @@ router.post('/Login', function(req, res, next) {
 								name:name,
 							});
 					}else{
-						res.send(StateCode.State_Permit)
+						res.send(StateCode.State_PermitOff)
 					}
 			}
 	})
