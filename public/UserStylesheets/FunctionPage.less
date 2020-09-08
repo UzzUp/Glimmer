@@ -7,11 +7,18 @@
 
 //设置全屏显示
 html,body{
-		height: 100%;
+		height: 95%;
 }
 //标准边框类型
 .USB_Border{
 	border-radius: 10px;
+	background-color: white;
+	border:2px @border_Color solid;
+}
+
+//选框边框类型
+.S_Border{
+	border-radius: 0px 15px 0px 15px;
 	background-color: white;
 	border:2px @border_Color solid;
 }
@@ -42,6 +49,24 @@ html,body{
 			height:20%;
 			position: absolute;
 			border-bottom:2px @border_Color solid;
+			
+			//字体显示
+			>font{
+				top: 0px;
+				left: 100px;
+				padding: 2px;
+				color: #5555ff;
+				cursor: pointer;
+				position: absolute;
+				transition: all 1s;
+				border-bottom: 1px cadetblue solid;				
+				
+				&:hover{
+					color: #5555ff;
+					border-radius: 0px 0px 10px 0px;	
+				}
+			}
+			
 			//头像框设置
 			#Head_Frame{
 				top: 0px;
@@ -62,6 +87,7 @@ html,body{
 					height: 100%;
 					position: absolute;
 				}
+				
 				
 				//设置蒙版效果
 				#Head_Select{
@@ -95,6 +121,7 @@ html,body{
 			
 			.Select_Button:hover{
 				margin-left: 5%;
+				border-radius: 15px 0px 15px 0px;
 			}
 		}
 	}
@@ -103,11 +130,6 @@ html,body{
 		height:100%;
 		padding: 0px;
 		overflow: hidden;
-		
-		//设置所有div默认为隐藏
-		>div{
-			display: none;
-		}
 		
 		//主页面
 		#Main-box{
@@ -119,15 +141,22 @@ html,body{
 		//设置好友列表属性
 		#big-box{
 			top:0px;
-			right: 0px;
-			width: 200px;
+			left: 0px;
+			width: 100%;
 			height: 100%;
-			position: absolute;
-			border-radius: 10px;
-			background-color: white;
-			border-top:2px @border_Color solid;
-			border-left:2px @border_Color solid;
-			border-bottom:2px @border_Color solid;
+			
+			#Friend_List{
+				top:0px;
+				right: 0px;
+				width: 200px;
+				height: 100%;
+				position: absolute;
+				border-radius: 10px;
+				background-color: white;
+				border-top:2px @border_Color solid;
+				border-left:2px @border_Color solid;
+				border-bottom:2px @border_Color solid;
+			}
 			
 			//设置好友单元
 			.Unit-shows{
@@ -167,11 +196,6 @@ html,body{
 				// 	}
 				// }
 			}
-		}
-		
-		//设置该窗口显示
-		.Open_Window{
-			display: block;
 		}
 	}
 }

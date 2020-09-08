@@ -17,6 +17,7 @@
     "http": "0.0.1-security",
     "http-errors": "~1.6.3",
     "id": "0.0.0",
+    "imageinfo": "^1.0.4",
     "less": "^3.12.2",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",

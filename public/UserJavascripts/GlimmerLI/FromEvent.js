@@ -8,7 +8,7 @@ $('#Login_Button').click(function(){
 				//请求登录事件
 				Login_Res("Login_From");
 		}else{
-				LoginHint("请勾选微光游戏安全协议。",function(){});
+				LoginHint("请勾选微光游戏安全协议。",function(){},2);
 		}
 })
 
@@ -31,7 +31,7 @@ $('#Account_test')
 				//打开提示弹窗
 				LoginHint("该账户已被注册,如果喜欢的名字被占用了,使用一些有个性的后缀如何？",function(){
 					$('#Account_test').focus()
-				});
+				},2);
 				SetSchedule()
 			}else if("X000-Y000"==response.data){
 				SetSchedule()
@@ -69,7 +69,7 @@ $('#Password_test')
 		SetSchedule()
 		LoginHint("密码不能为空,请输入密码。",function(){
 			$('#Password_test').focus()
-		});
+		},2);
 	}else{
 		if( /^(?=.*[A-Za-z])(?=.*\d)[^\u4e00-\u9fa5][^]{8,14}$/.test(this.value)){
 			SetSchedule()
@@ -78,7 +78,7 @@ $('#Password_test')
 			LoginHint("密码需要8-16个字符,1个字母和1个数字,不含中文,请重试。",function(){
 				$('#Password_test').val("");
 				$('#Password_test').focus()
-			});
+			},2);
 		}
 	}
 })
@@ -110,7 +110,7 @@ $('#Register_Button').click(function(){
 		});
 	}else{
 		//打开提示弹窗
-		LoginHint("注册失败！注册列表所有项都为必填项,请仔细审阅。",function(){});
+		LoginHint("注册失败！注册列表所有项都为必填项,请仔细审阅。",function(){},2);
 	}	
 })
 
@@ -137,25 +137,29 @@ function SetSchedule(){
 	}
 		
 		//根据进度条设置颜色
-		$("#schedule").get(0).style.width = Schedule_Length+"%"
+		let ScheduleS = document.getElementById("schedule")
+		ScheduleS.style.width = Schedule_Length+"%"
 		if(Schedule_Length<30){
-			$("#schedule").get(0).style.backgroundColor = "#ff5500"
+			ScheduleS.style.backgroundColor = "#ff5500"
 		}else if(Schedule_Length<60){
-			$("#schedule").get(0).style.backgroundColor = "#ffff00"
+			ScheduleS.style.backgroundColor = "#ffff00"
 		}else if(Schedule_Length<90){
-			$("#schedule").get(0).style.backgroundColor = "#55aaff"
+			ScheduleS.style.backgroundColor = "#55aaff"
 		}else{
-			$("#schedule").get(0).style.backgroundColor = "#1aff1a"
+			ScheduleS.style.backgroundColor = "#1aff1a"
 		}
 }
 
 //登录请求
 function Login_Res(ElementID){
+	
+	//登录的等待加载
+	let index = Load(10)
+	
 	axios.post("users/Login",$('#'+ElementID).serialize())
 	.then(function (response) {
-		let Event = "";//结束事件
-		let Time_Before = "";//时间描述(前)
-		let Time_After = "";//时间描述(后)
+		//关闭等待
+		layer.close(index);
 		
 		if("X000-Y001"==response.data||"X001-Y001"==response.data){
 				//打开提示弹窗
@@ -163,12 +167,15 @@ function Login_Res(ElementID){
 					//清除密码输入
 					$("#Password").val("");
 					$('#Password').focus()
-				});
+				},2);
 		}else if("X001-Y002"==response.data){
-				LoginHint("该用户已经登录!如不是本人操作,请前往安全中心修改密码",function(){});
+				LoginHint("该用户已经登录!如不是本人操作,请前往安全中心修改密码",function(){},2);
 		}else{
-				//如果登录成功，则转至具体服务页面
-			  $("body").html(response.data);
+				//欢迎界面
+				LoginHint("登录成功,欢迎回来,亲爱的用户。",function(){
+					//如果登录成功，则转至具体服务页面
+					$("body").html(response.data);
+				},2,0)
 		}
 	})
 	.catch(function (error) {
@@ -178,14 +185,29 @@ function Login_Res(ElementID){
 
 
 //登录信息提示
-function LoginHint(HintString,HintFunction){
-	layer.msg(HintString, {
-		anim: 6,//设置动画样式
+function LoginHint(HintString,HintFunction,ShowTime,AnimSelect){
+	//当参数中没有该数时使用默认的样式
+	let AnimS = (typeof AnimSelect == "undefined")?6:AnimSelect
+	
+	let index = layer.msg(HintString, {
+		anim: AnimS,//设置动画样式
 		id:"Hint",
-		time: 1000*2,
-		offset: ['40%','30%'],//设置位置
+		time: 1000*ShowTime,
+		offset: 'auto',//设置位置
 		shade:[0.8, '#bcbcbc'],//设置遮盖
 	},
 		HintFunction
 	);
+	//返回这个弹窗的序号
+	return index
+}
+
+//加载层信息提示
+function Load(ShowTime){
+	let index = layer.load(1,{
+		time: 1000*ShowTime,
+		shade:[0.3, '#ffffff'],//设置遮盖
+	});
+	//返回这个弹窗的序号
+	return index
 }

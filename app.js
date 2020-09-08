@@ -28,10 +28,11 @@ app.use(bodyParser.urlencoded({
 
 //设置session信息
 app.use(session({
-    secret: 'XXXXXX',
-    name: 'AppKey', 
-    cookie: {maxAge: 60000 * 10 },  //设置ssesion失效时间
-    resave: true,
+    secret: 'GlimmerSecret',
+    name: 'GlimmerKey', 
+    activeDuration: 1 * 1 * 1000, //设置连接最大时间间隔
+    cookie: {maxAge: 60000 * 60 * 24 },  //设置ssesion失效时间
+		resave: true,
     saveUninitialized: true
 }));
 
@@ -40,14 +41,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-//配置session
-// app.use(session({
-//   secret:"NotbodyNotthing",//设置签名秘钥  内容可以任意填写
-//   cookie:{maxAge:30*60*1000},//设置cookie的过期时间为半小时
-//   resave:true,//强制保存，如果session没有被修改也要重新保存
-//   saveUninitialized:false//如果原先没有session那么就设置，否则不设置
-// }))
 
 
 app.use('/', indexRouter);

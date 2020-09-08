@@ -10,6 +10,7 @@
 		<!-- 导入必要依赖 -->
 		<script type="text/javascript" src="/javascripts/jquery.min.js">	</script>
 		<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+		<script type="text/javascript" src="javascripts/axios.min.js"></script>
 		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css"/>
 		
 		<!-- 导入依赖插件 -->
@@ -23,11 +24,12 @@
   </head>
   <body>
 		<!-- 动态背景 -->
-		<canvas id="Back" width="300" height="150" style="position:fixed;left: 0px;top: 0px;"></canvas>
+		<canvas id="Back" width="300" height="150" style="position:fixed;left: 0px;top: 0px;"></canvas>		
 		<!-- 主体内容 -->
-		<div class="container-fluid" style="height:100%">
+		<div class="container-fluid" style="height:97%;margin-top: 3%;">
 			<div id="Show_Body" class="col-md-12">
 				<div id="Function_List" class="col-md-2 USB_Border">
+					
 					<!-- 用户的信息 -->
 					<div id="User_Message">
 						<div id="Head_Frame">
@@ -41,47 +43,115 @@
 									</form>
 								</div>
 							</label>
-							<img id="Head_Image" src='<%=locals.HeadImage||"./HeadImage/AccountHead.png"%>' style="width: 100%;height: 100%;"/>
+							<img id="Head_Image" v-bind:src='ShowHead' style="width: 100%;height: 100%;"/>
 						</div>
-						<font size="3" color="#000000" style="left: 90px;top: 10px;position: absolute;">昵称:<%=(locals.name).length>4?(locals.name).substring(0,3)+"..":locals.name||"未知"%></font>
-						<!-- <font size="3" color="#000000" style="left: 90px;top: 40px;position: absolute;">用户:<%=locals.username||"未知"%></font> -->
+						<!-- 用户名称 -->
+						<font size="3" color="#000000" >{{ShowName}}</font>
 					</div>
+					<!-- 功能列表 -->
 					<div id="Function">
-								<div id="Main_Window" data-select="Main-box" class="Select_Button USB_Border">
-									<img src="./images/UIimage/home.png" width="30px" height="70%" style="margin-top: 3px;"/>
-									<font size="3" color="#03D0FF" style="">我的首页</font>
-								</div>
-								<div id="Friend_Window" data-select="big-box" class="Select_Button USB_Border">
-									<img src="./images/UIimage/Friend_On.png" width="30px" height="70%" style="margin-top: 3px;"/>
-									<font size="3" color="#03D0FF" style="">好友信息</font>
-								</div>
-								<div id="Game_Window" data-select="Main-box" class="Select_Button USB_Border">
-									<img src="./images/UIimage/Game_On.png" width="30px" height="70%" style="margin-top: 3px;"/>
-									<font size="3" color="#03D0FF" style="">游戏列表</font>
-								</div>
+						<template v-for="(ListMessage,index) in Functions">
+							<div v-bind:id="ListMessage.Elid" @click="Frame_Select(ListMessage.Elid,index)" class="Select_Button S_Border">
+								<img v-bind:src="ListMessage.Icon" width="30px" height="70%" style="margin-top: 3px;"/>
+								<font size="3" color="#03D0FF" style="" >{{ListMessage.name}}</font>
+								<img v-show="ListMessage.Select" src="./images/UIimage/Select.png" width="30px" height="70%" style="margin-left: 30px;margin-top: 10px;"/>
+							</div>
+						</template>
 					</div>
 				</div>
 				<div id="Function_Page" class="col-md-8 col-md-offset-1 USB_Border">
 					<!-- 前端主页面 -->
-					<div id="Main-box" class="Open_Window">
+					<div id="Main-box" v-if="ShowSelect == 'Main-box'">
 						<img src="./images/BackImage/HelloUser.jpg" width="100%" height="100%"/>
 					</div>
 					<!-- 好友单元 -->
-					<div id="big-box" class="">
+					<div id="big-box" v-else-if="ShowSelect == 'big-box'">
 						<!-- 根据好友数量设置好友单元数量 -->
+						<div id="Friend_List">
+							
+						</div>
 					</div>
-					<div></div>
-					<div></div>
 				</div>
 			</div>
 		</div>
 		
 		<!-- 放置ejs模板传来的值,供其他js文件使用 -->
 		<script type="text/javascript">
-			var UserName = "<%=locals.name%>"//用户的名称
+			let UserName = "<%=locals.name%>"//用户的名称
+			let HeadImage = "<%=locals.HeadImage%>"//头像路径
+			
+			//用户信息框的动态绑定
+			let Message_frame = new Vue({
+				el:"#User_Message",
+				data:{
+					UserName : UserName,
+					HeadImage : HeadImage
+				},
+				computed:{
+					ShowName : function(){//设置显现的名字的样式
+						return (this.UserName).length>6?(this.UserName).substring(0,5)+"..":this.UserName
+					},
+					ShowHead : function(){//头像的显示路径
+						return this.HeadImage
+					}
+				}
+			})
+			
+			//功能显示窗口
+			let Show_frame = new Vue({
+				el:"#Function_Page",
+				data:{
+					ShowSelect : "Main-box",
+				}
+			})
+			
+			//功能选择框的动态绑定
+			let Function_frame = new Vue({
+				el:"#Function",
+				data:{
+						Functions : [
+							{
+								Elid : "Main_Window",
+								name : "我的首页",
+								Icon : "./images/UIimage/home.png",
+								Hframe : "Main-box",
+								Select : true
+							},
+							{
+								Elid : "Friend_Window",
+								name : "好友信息",
+								Icon : "./images/UIimage/Friend_On.png",
+								Hframe : "big-box",								
+								Select : false								
+							},
+							{
+								Elid : "Game_Window",
+								name : "游戏列表",
+								Icon : "./images/UIimage/Game_On.png",
+								Hframe : "",								
+								Select : false
+							}
+						]
+				},
+				methods:{
+					//界面选择
+					Frame_Select : function(FrameName,index){
+						//设置唯一选中状态
+						for(let i = 0,y = this.Functions.length;i<y;i++){
+								if(i == index){
+									this.Functions[i].Select = true
+								}else{
+									this.Functions[i].Select = false
+								}
+						}
+						//设置显示的界面
+						Show_frame.ShowSelect = this.Functions[index].Hframe
+					}
+				}
+			})
+			
 		</script>
 		<script type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>
-		<!-- 增加背景 -->
-		<script type="text/javascript" src="UserJavascripts/GlimmerLI/TrendsBack.js">	</script>
+		<script type="text/javascript" src="UserJavascripts/GlimmerLI/TrendsBack.js">	</script>	
   </body>
 </html>

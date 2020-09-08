@@ -10,10 +10,10 @@
 				// });
 				
 				
-				let Iset = LoginHint("欢迎您回来,亲爱的"+UserName+"。",()=>{})
-				setTimeout(function(){
-					layer.style(Iset,{top:"300px"})//设置弹出层位置
-				},3000)
+				// let Iset = LoginHint("欢迎您回来,亲爱的"+UserName+"。",()=>{})
+				// setTimeout(function(){
+				// 	layer.style(Iset,{top:"300px"})//设置弹出层位置
+				// },3000)
 				//提交头像表单事件
 				$("#HeadFile").get(0).onchange = function () {
 						let thisFile = this.files[0]
@@ -43,25 +43,16 @@
 				}
 				
 				
-				//登录信息提示
+				//信息提示
 				function LoginHint(HintString,HintFunction){
 					let index = layer.msg(HintString, {
-						anim: 1,//设置动画样式
+						anim: 5,//设置动画样式
 						time: 1000*10,
 						offset: ['5%','80%'],//设置位置
 					},
 						HintFunction
 					)
-					layer.style(index,{transition:"all 1s"})//设置移动方法
-					
-					
+					layer.style(index,{transition:"top 2s"})//设置移动方法
 					return index
 				}
 				
-				
-				//切换界面动画效果(根据用户的点击选择)
-				$("#Function>").click(function(){
-					let Open_Obj = $(this).attr("data-select");
-					$("#Function_Page>").removeClass("Open_Window");
-					$("#"+Open_Obj).addClass("Open_Window");
-				})

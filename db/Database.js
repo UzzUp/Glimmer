@@ -9,12 +9,22 @@ let Connect = db.createConnection({
 
 Connect.connect()
 
-// 测试
-// Connect.query("select * from Userlist",function(err,rls){
-// 	if(err){
-// 		console.log(err)
-// 	}
-// 	console.log(rls)
-// })
+//获得用户的头像
+function GetImage (Userid,Event){
+		let Mysql_String = `select Headimage from Userlist WHERE id='${Userid}'`
+		Connect.query(Mysql_String,Event)
+}
 
-module.exports = Connect
+//根据特定的唯一键对比,获得指定的用户信息
+function MessgaeGet (OnlyKey,OnlyValue,Event){
+		let Mysql_String = `select * from Userlist WHERE ${OnlyKey}='${OnlyValue}'`
+		Connect.query(Mysql_String,Event)
+}
+
+
+//数据连接对象以及部分封装获取方法
+module.exports = {
+	Connect : Connect,
+	GetImage :GetImage,
+	MessgaeGet:MessgaeGet
+}
