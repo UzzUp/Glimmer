@@ -8,7 +8,6 @@ var app = require('../app');
 var debug = require('debug')('glimmer-servlet:server');
 var http = require('http');
 var io = require('../socketio');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -21,10 +20,13 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
 /**
- * 根据创建好的http连接,创建socket关键字连接
+ * 使用封装好的socket方法创建Socket连接
  */
-io.getSocketio(server);
+
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */

@@ -2,6 +2,7 @@
 //-----------------------标准
 //边框颜色(标准)
 @border_Color : #bcbcbc;
+@hover_border_Color : #ffaa7f;
 //动画时间(标准)
 @Anim_Time : 2s;
 
@@ -148,7 +149,7 @@ html,body{
 			#Friend_List{
 				top:0px;
 				right: 0px;
-				width: 200px;
+				width: 20%;
 				height: 100%;
 				position: absolute;
 				border-radius: 10px;
@@ -156,30 +157,80 @@ html,body{
 				border-top:2px @border_Color solid;
 				border-left:2px @border_Color solid;
 				border-bottom:2px @border_Color solid;
-			}
-			
-			//设置好友单元
-			.Unit-shows{
-				width: 90%;
-				height: 70px;
-				margin-left:5%;
-				margin-top: 10px;
-				border-radius: 10px;
-				transition: all 0.3s;
-				background-color:  #ffffff;
-				border:2px @border_Color solid;
 				
-				//设置好友头像框
-				.F_Headimage{
-					width: 40px;
+				//设置好友单元
+				.Unit-shows{
+					width: 90%;
 					height: 40px;
+					margin-left:5%;
 					margin-top: 10px;
-					margin-left: 10px;
 					overflow: hidden;
 					border-radius: 10px;
-					border:1px @border_Color solid;
+					transition: all 0.3s;
+					background-color:  #ffffff;
+					border:2px @border_Color solid;
+					
+					//触摸动画
+					&:hover{
+						height: 80px;
+						border:2px @hover_border_Color solid;
+					}
+					
+					//设置好友头像框
+					.F_Headimage{
+						width: 30px;
+						height: 30px;
+						margin-top: 3px;
+						margin-left: 3px;
+						overflow: hidden;
+						border-radius: 10px;
+						border:1px @border_Color solid;
+					}
+					
+					//设置在线显示栏
+					.F_State{
+						width: 15px;
+						height: 15px;
+						margin-top: -15px;
+						margin-left: 40px;
+					}
+					
+					//个人功能选择栏
+					.State_Frame{
+						width: 100%;
+						height: 37px;
+						margin-top: 7px;
+						//状态UI
+						.State_UI{
+							width: 28px;
+							height: 28px;
+							margin-top: 2px;
+							margin-left: 14px;
+						}									
+					}
 				}
 			}
+			
+			#Send_Message{
+				left: 0px;
+				bottom:0px;
+				width: 80%;
+				height: 30%;
+				position: absolute;
+				background-color: white;
+				border:2px @border_Color solid;
+			}
+			
+			#Friend_Message{
+				top:0px;
+				left: 0px;
+				width: 80%;
+				height: 70%;
+				position: absolute;
+				background-color: white;
+				border:2px @border_Color solid;
+			}
+			
 			/* 关闭 */
 			.Close{
 				background-color: #ffffff;
@@ -188,13 +239,6 @@ html,body{
 			.Open{
 				height: 120px;
 				background-color: #aaffff;
-				//设置放大
-				// .F_Headimage{
-				// 	>img{
-				// 		width: 80px;
-				// 		height: 80px;
-				// 	}
-				// }
 			}
 		}
 	}

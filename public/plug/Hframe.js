@@ -1,5 +1,10 @@
+				
+				//绑定的div
+				let AddDiv = "Friend_List"
+				let AddSlider = "#Friend_List"
+				
 				//盒子对象
-				let Box = $("#big-box")
+				let Box = $("#"+AddDiv)
 				Box.css("transform","margin-top 3s")
 				//透明度
 				let slider_alpha = 0.5
@@ -86,7 +91,7 @@
 				let slider_width = slider.offsetWidth-1
 				let slider_height = slider.offsetHeight
 				//获得最后一个标签单位
-				let Last_Unit = document.getElementById("big-box").lastElementChild
+				let Last_Unit = document.getElementById(AddDiv).lastElementChild
 				//设置界面总高度
 				let slider_block_length = Last_Unit.offsetTop+Last_Unit.offsetHeight
 				//设置滑块初始位置

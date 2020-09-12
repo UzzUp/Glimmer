@@ -7,16 +7,9 @@
 		
 		<!-- 设置页面图标 -->
 		<link rel="shortcut icon" href="/images/logo/GlimmerIco.ico">
-		<!-- 导入必要依赖 -->
-		<script type="text/javascript" src="/javascripts/jquery.min.js">	</script>
-		<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
-		<script type="text/javascript" src="javascripts/axios.min.js"></script>
+
 		<link rel="stylesheet" href="/stylesheets/bootstrap.min.css"/>
-		
-		<!-- 导入依赖插件 -->
-		<script type="text/javascript" src="./plug/layer/layer.js"></script>
-		<script type="text/javascript" src="./plug/vue.min.js"></script>
-		
+			
 		<!-- 导入自身依赖 -->
 		<link href="./UserStylesheets/FunctionPage.less" rel="stylesheet/less"/>
 		<script type="text/javascript" src="javascripts/less.min.js"></script>
@@ -68,17 +61,51 @@
 					<div id="big-box" v-else-if="ShowSelect == 'big-box'">
 						<!-- 根据好友数量设置好友单元数量 -->
 						<div id="Friend_List">
+							<template v-for="Message in GetFriendList">
+								<div class="Unit-shows">
+									<img class="F_Headimage" :src="Message.Headimage" >
+									<font>{{Message.name.length>3?Message.name.substring(0,3)+"..":Message.name}}</font>
+									<img class="F_State" :src="'./images/UIimage/'+Message.State">
+									<div class="USB_Border State_Frame" >
+										<!-- 按钮UI与事件绑定 -->
+										<img class="State_UI " @click="OpenOnline(Message.UserId)" src="./images/UIimage/OnlineUp.png">
+										<img class="State_UI " @click="" src="./images/UIimage/Means.png">
+										<img class="State_UI " @click="" src="./images/UIimage/Set.png">
+									</div>
+								</div>
+							</template>
+						</div>
+						<!-- 聊天输入框 -->
+						<div id="Send_Message">
+							
+						</div>
+						<!-- 聊天信息显示框 -->
+						<div id="Friend_Message">
 							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+	
+	
+		<!-- 导入必要依赖 -->
+		<script type="text/javascript" src="/javascripts/jquery.min.js">	</script>
+		<script type="text/javascript" src="/javascripts/axios.min.js"></script>
+		<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/javascripts/socket.io.js"></script>
+		<!-- 导入依赖插件 -->
+		<script type="text/javascript" src="./plug/layer/layer.js"></script>
+		<script type="text/javascript" src="./plug/vue.min.js"></script>	
 		<!-- 放置ejs模板传来的值,供其他js文件使用 -->
 		<script type="text/javascript">
-			let UserName = "<%=locals.name%>"//用户的名称
-			let HeadImage = "<%=locals.HeadImage%>"//头像路径
+			let UserName = "<%=name%>"//用户的名称
+			let HeadImage = "<%=HeadImage%>"//头像路径
+			let FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
+			let FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
+			
+			let socket = io.connect('ws://127.0.0.1:3100')
+			socket.emit('login',"<%=UserId%>");
 			
 			//用户信息框的动态绑定
 			let Message_frame = new Vue({
@@ -101,7 +128,37 @@
 			let Show_frame = new Vue({
 				el:"#Function_Page",
 				data:{
-					ShowSelect : "Main-box",
+					ShowSelect : "big-box",
+					FriendList : FriendList,
+					FriendState : FriendState
+				},
+				computed:{
+					//获取用户信息列表
+					GetFriendList:function(){
+						let Online = []//在线列表
+						let Out = []//离线列表
+						
+						//根据用户状态排序，并设置信息组
+						if(this.FriendState.length != 0){
+							for(let X = 0 ,Y = this.FriendList.length;X<Y;X++){							
+								if(this.FriendState.indexOf(this.FriendList[X].UserId+"")!=-1){
+									this.FriendList[X].State = "Online.png"
+									Online.push(this.FriendList[X])
+								}else{
+									this.FriendList[X].State = "Out.png"
+									Out.push(this.FriendList[X])
+								}
+							}
+						}
+
+						//拼接两个列表并返回
+						return JsonJoin(Online,Out)
+					},
+				},
+				methods:{
+					OpenOnline:function(UserId){//打开聊天框事件
+						
+					}
 				}
 			})
 			
@@ -115,14 +172,14 @@
 								name : "我的首页",
 								Icon : "./images/UIimage/home.png",
 								Hframe : "Main-box",
-								Select : true
+								Select : false
 							},
 							{
 								Elid : "Friend_Window",
 								name : "好友信息",
 								Icon : "./images/UIimage/Friend_On.png",
 								Hframe : "big-box",								
-								Select : false								
+								Select : true								
 							},
 							{
 								Elid : "Game_Window",
@@ -146,12 +203,28 @@
 						}
 						//设置显示的界面
 						Show_frame.ShowSelect = this.Functions[index].Hframe
-					}
+					},
 				}
 			})
 			
+			// 拼接json类型的对象
+			function JsonJoin(Json_One, Json_Tow) {
+			  let Join_Json = []
+				
+				for (let X = 0, Y = Json_One.length;X<Y;X++) {
+				  Join_Json.push(Json_One[X])
+				}
+				
+				for (let X = 0, Y = Json_Tow.length;X<Y;X++) {
+				  Join_Json.push(Json_Tow[X])
+				}
+				
+				return Join_Json
+			}
+			
+
 		</script>
 		<script type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>
-		<script type="text/javascript" src="UserJavascripts/GlimmerLI/TrendsBack.js">	</script>	
-  </body>
+		<script type="text/javascript" src="UserJavascripts/GlimmerLI/TrendsBack.js"></script>	
+	</body>
 </html>

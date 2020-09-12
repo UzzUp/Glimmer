@@ -21,10 +21,33 @@ function MessgaeGet (OnlyKey,OnlyValue,Event){
 		Connect.query(Mysql_String,Event)
 }
 
+//根据好友结果集，生成好友信息结果集
+function FriendRls (Friend_List,ListFls,GetFls){
+		let Friend = Friend_List.split("[$F]")
+		
+		let Mysql_String = `select * from Userlist WHERE id in (${Friend.join(",")})`
+		Connect.query(Mysql_String,function(err,rls){
+			
+			let Friendrls = []
+			let Friend_State = []
+			
+			for(let i = 0,j = rls.length;i<j;i++){
+				Friendrls.push({
+					name : rls[i].name,
+					UserId: rls[i].id,
+					Headimage : ("HeadImage/"+rls[i].Headimage)
+				})
+			}
+
+			GetFls(Friendrls)
+		})
+}
+
 
 //数据连接对象以及部分封装获取方法
 module.exports = {
 	Connect : Connect,
 	GetImage :GetImage,
-	MessgaeGet:MessgaeGet
+	MessgaeGet:MessgaeGet,
+	FriendRls:FriendRls
 }

@@ -9,6 +9,21 @@ let image = require("imageinfo");
 let Database = require('../db/Database.js')
 let StateCode = require('../db/State_Code.js')
 
+let io = require('../socketio.js')
+
+io.Client_io.on('connection', function (socket) {
+			console.log("连接成功")
+			
+			socket.on('login',function (obj) {
+				console.log(obj)
+			})
+			
+	    socket.on("disconnect",function (){  // 客户端断开链接
+				console.log("客户端断开连接")
+			})
+})
+
+
 //功能测试区域
 router.get('/', function(req, res, next) {
 		res.render('FunctionPage',{HeadImage:"./HeadImage/AccountHead.png",username:"2497",name:"实验君"});
@@ -92,7 +107,6 @@ router.post('/Register', function(req, res, next) {
 
 //登录请求
 router.post('/Login', function(req, res, next) {
-	
 		
 	let Login_Account = req.body.Account;//获取登录的账户
 	let Login_User_Message = "";//获取到的用户信息组
@@ -139,23 +153,51 @@ router.post('/Login', function(req, res, next) {
 					let name = Login_User_Message[0].name
 					let Username = Login_User_Message[0].Username
 									
-									
 					//登录成功,把信息存储在session中
 					req.session.name = name
 					req.session.Userid = id
 					req.session.Username = Username
-			
+					
 					if(Login_User_Message[0].Headimage!=null&&Login_User_Message[0].Headimage!=""){
 						Image_URL = Login_User_Message[0].Headimage
 					}
-									
-					// let Friend_List = (Login_User_Message[0].FriendList).split("[$F]");
-					//发送服务页面信息
-					res.render('FunctionPage',{
-						HeadImage:"./HeadImage/"+Image_URL,
-						username:Username,
-						name:name,
-					});
+
+					//根据好友信息获取好友信息结果集
+					Database.FriendRls(Login_User_Message[0].FriendList,req,function(Value){
+						//获取到用户登录情况
+						let List_Message = Login_User_Message[0].FriendList.split("[$F]")
+						//好友数量
+						let List_Number = List_Message.length;
+						//获取好友在线状态信息
+						let List_State = []
+						
+						//获取好友登录状态时
+						req.sessionStore.all(function(err,sessions){
+							for(let OBJ in sessions){
+								//遍历对比所有的id
+								if(List_Message.indexOf(sessions[OBJ]['Userid']+"")!=-1){
+									//添加在线状态信息
+									List_State.push(sessions[OBJ]['Userid'])
+									if(--List_Number == 0){
+										break
+									}
+								}
+							}
+							
+							//将在线数据修改为String类型
+							let List_State_String = List_State.join("|X|")
+							
+							//发送服务页面信息
+							res.render('FunctionPage',{
+								HeadImage:"./HeadImage/"+Image_URL,
+								username:Username,
+								name:name,
+								UserId:id,
+								FriendList:Value,
+								FriendState:List_State_String
+							});
+						})
+					})
 			}else{
 				res.send(StateCode.State_PermitOff)
 			}
@@ -163,7 +205,6 @@ router.post('/Login', function(req, res, next) {
 	}, function(err) {//抛出错误
 	  console.log('reject:' + err);
 	});
-	
 	
 });
 

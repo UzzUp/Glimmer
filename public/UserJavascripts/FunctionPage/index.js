@@ -1,19 +1,3 @@
-				// //好友列表动画效果
-				// $("#big-box>").mouseenter(function(){
-				//   $(this).addClass("Open");
-				//   $(this).removeClass("Close");
-				// });
-				
-				// $("#big-box>").mouseout(function(){
-				//   $(this).addClass("Close");
-				//   $(this).removeClass("Open");
-				// });
-				
-				
-				// let Iset = LoginHint("欢迎您回来,亲爱的"+UserName+"。",()=>{})
-				// setTimeout(function(){
-				// 	layer.style(Iset,{top:"300px"})//设置弹出层位置
-				// },3000)
 				//提交头像表单事件
 				$("#HeadFile").get(0).onchange = function () {
 						let thisFile = this.files[0]

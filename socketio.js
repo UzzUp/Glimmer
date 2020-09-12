@@ -1,13 +1,10 @@
-  /* 
-  封装socket.io,为了获取server以便监听. 
-  */  
-  var socketio = {};  
-  var socket_io = require('socket.io');  
+let socketio = {};
+let socket_io = require('socket.io'); 
+let http = require('http');
 
-  //获取io  
-  socketio.getSocketio = function(server){  
-    var io = socket_io.listen(server);  
-  };  
 
-	//设置socket连接对象
-	module.exports = socketio;  
+let Client_io = socket_io.listen(http.createServer(()=>{}).listen(3100)); 
+
+module.exports = {
+		Client_io : Client_io,
+};
