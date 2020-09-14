@@ -13,11 +13,25 @@ let io = require('../socketio.js')
 
 io.Client_io.on('connection', function (socket) {
 			console.log("连接成功")
-			
+			//登录事件
 			socket.on('login',function (obj) {
-				console.log(obj)
+				//增加Socket对象
+				io.AddSocket(obj,socket)
+				// io.GetSocket(obj)
 			})
-			
+			//发送事件
+			socket.on('Send',function (Send_Message) {//获取消息事件[接受者id][发送者id][发送消息]
+
+				let Message_List = Send_Message.split("|X|")
+				let User_Socket = io.GetSocket(Message_List[0])
+				if(User_Socket!=null){
+					
+					User_Socket.Socket.emit('Send',{
+						Text:[Message_List[1],Message_List[2]].join("|X|")
+					})
+				}
+			})
+			//用户端断开连接事件
 	    socket.on("disconnect",function (){  // 客户端断开链接
 				console.log("客户端断开连接")
 			})
@@ -95,9 +109,9 @@ router.post('/headImage', function(req, res, next) {
 
 //注册请求
 router.post('/Register', function(req, res, next) {
-		let Mysql_String = `INSERT INTO userlist (id,Username,Password,name) 
+		let Mysql_String = `INSERT INTO userlist (id,Username,Password,name,Headimage) 
 		VALUES 
-		(0,'${req.body.Account}','${req.body.Password}','${req.body.name}')`
+		(0,'${req.body.Account}','${req.body.Password}','${req.body.name}','AccountHead.png')`
 		//发送注册成功的信息
 		Database.Connect.query(Mysql_String,function(err,rls){
 			if(err) console.log(err)
@@ -165,7 +179,7 @@ router.post('/Login', function(req, res, next) {
 					//根据好友信息获取好友信息结果集
 					Database.FriendRls(Login_User_Message[0].FriendList,req,function(Value){
 						//获取到用户登录情况
-						let List_Message = Login_User_Message[0].FriendList.split("[$F]")
+						let List_Message = Login_User_Message[0].FriendList==null?[]:Login_User_Message[0].FriendList.split("[$F]")
 						//好友数量
 						let List_Number = List_Message.length;
 						//获取好友在线状态信息

@@ -1,5 +1,6 @@
 let db = require('mysql')
 
+let Test_Open = false
 let Connect = db.createConnection({
 	host			:'127.0.0.1',
 	user  		:'root',
@@ -23,24 +24,33 @@ function MessgaeGet (OnlyKey,OnlyValue,Event){
 
 //根据好友结果集，生成好友信息结果集
 function FriendRls (Friend_List,ListFls,GetFls){
-		let Friend = Friend_List.split("[$F]")
-		
-		let Mysql_String = `select * from Userlist WHERE id in (${Friend.join(",")})`
-		Connect.query(Mysql_String,function(err,rls){
-			
-			let Friendrls = []
-			let Friend_State = []
-			
-			for(let i = 0,j = rls.length;i<j;i++){
-				Friendrls.push({
-					name : rls[i].name,
-					UserId: rls[i].id,
-					Headimage : ("HeadImage/"+rls[i].Headimage)
-				})
-			}
+	
+		let Friend = null
 
-			GetFls(Friendrls)
-		})
+		if(typeof Friend_List != "undefined"&&Friend_List!=null){
+			Friend = Friend_List.split("[$F]")
+			let Mysql_String = `select * from Userlist WHERE id in (${Friend.join(",")})`
+				Connect.query(Mysql_String,function(err,rls){
+					
+					let Friendrls = []
+					let Friend_State = []
+					
+					//判断结果集是否为空
+					if(!(typeof rls == "undefined"||rls == null)){
+						for(let i = 0,j = rls.length;i<j;i++){
+							Friendrls.push({							
+								name : rls[i].name,
+								UserId : rls[i].id,
+								Headimage : ("HeadImage/"+rls[i].Headimage)
+							})
+						}
+					}
+				
+					GetFls(Friendrls)
+				})
+		}else{
+			GetFls([])
+		}
 }
 
 
@@ -49,5 +59,6 @@ module.exports = {
 	Connect : Connect,
 	GetImage :GetImage,
 	MessgaeGet:MessgaeGet,
-	FriendRls:FriendRls
+	FriendRls:FriendRls,
+	Test_Open:Test_Open//测试开关
 }

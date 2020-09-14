@@ -189,10 +189,9 @@ html,body{
 					
 					//设置在线显示栏
 					.F_State{
+						margin-left: 20px;
 						width: 15px;
 						height: 15px;
-						margin-top: -15px;
-						margin-left: 40px;
 					}
 					
 					//个人功能选择栏
@@ -210,22 +209,44 @@ html,body{
 					}
 				}
 			}
-			
+			//信息发送框
 			#Send_Message{
 				left: 0px;
 				bottom:0px;
 				width: 80%;
-				height: 30%;
+				height: 35%;
 				position: absolute;
 				background-color: white;
 				border:2px @border_Color solid;
+				
+				#Send_Select{
+					width:100%;
+					height:20%;
+					border-bottom:4px @border_Color solid;
+					background-color: #0078D7;
+				}
+				
+				#Send_Button{
+					top: 75%;
+					left: 80%;
+					position: absolute;
+				}
+				
+				#Send_Frame{
+					width:100%;
+					height:80%;
+					border:none;
+					resize:none;
+					display: block;
+				}
 			}
 			
+			//聊天信息显示框
 			#Friend_Message{
 				top:0px;
 				left: 0px;
 				width: 80%;
-				height: 70%;
+				height: 65%;
 				position: absolute;
 				background-color: white;
 				border:2px @border_Color solid;

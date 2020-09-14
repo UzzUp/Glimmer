@@ -172,7 +172,7 @@ function Login_Res(ElementID){
 				LoginHint("该用户已经登录!如不是本人操作,请前往安全中心修改密码",function(){},2);
 		}else{
 				//欢迎界面
-				LoginHint("登录成功,欢迎回来,亲爱的用户。",function(){
+				LoginHint("欢迎回来,亲爱的用户。",function(){
 					//如果登录成功，则转至具体服务页面
 					$("body").html(response.data);
 				},2,0)

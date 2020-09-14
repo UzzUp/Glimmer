@@ -75,13 +75,19 @@
 								</div>
 							</template>
 						</div>
-						<!-- 聊天输入框 -->
-						<div id="Send_Message">
-							
-						</div>
 						<!-- 聊天信息显示框 -->
 						<div id="Friend_Message">
-							
+							<div>
+								<img style="width: 30px;height: 30px;" :src="GetChatWith()" >
+							</div>
+						</div>
+						<!-- 聊天输入框 -->
+						<div id="Send_Message">
+							<div id="Send_Select">
+								
+							</div>
+							<input id="Send_Button" @click="SendMessage()" class="btn btn-info" type="button" value="发送(Alt+S)" >
+							<textarea id="Send_Frame"></textarea>
 						</div>
 					</div>
 				</div>
@@ -99,13 +105,19 @@
 		<script type="text/javascript" src="./plug/vue.min.js"></script>	
 		<!-- 放置ejs模板传来的值,供其他js文件使用 -->
 		<script type="text/javascript">
+			const Userid = "<%=UserId%>"//用户的id
 			let UserName = "<%=name%>"//用户的名称
 			let HeadImage = "<%=HeadImage%>"//头像路径
 			let FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
 			let FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
 			
 			let socket = io.connect('ws://127.0.0.1:3100')
-			socket.emit('login',"<%=UserId%>");
+			socket.emit('login',Userid);
+			
+			socket.on('Send',function (Send_Message) {//获取消息事件[发送者id][消息内容]
+				let Message_List = (Send_Message.Text).split("|X|")
+				alert(Message_List[0]+"用户发送:"+Message_List[1])
+			})
 			
 			//用户信息框的动态绑定
 			let Message_frame = new Vue({
@@ -128,6 +140,7 @@
 			let Show_frame = new Vue({
 				el:"#Function_Page",
 				data:{
+					ChatWith : "null",//聊天对象的ID
 					ShowSelect : "big-box",
 					FriendList : FriendList,
 					FriendState : FriendState
@@ -148,6 +161,12 @@
 									this.FriendList[X].State = "Out.png"
 									Out.push(this.FriendList[X])
 								}
+								
+								//当头像不存在时,使用默认头像代替
+								if(this.FriendList[X].Headimage=="null"){
+									this.FriendList[X].Headimage = "HeadImage/AccountHead.png"
+								}
+													
 							}
 						}
 
@@ -157,8 +176,19 @@
 				},
 				methods:{
 					OpenOnline:function(UserId){//打开聊天框事件
-						
-					}
+						this.ChatWith = UserId;//存储聊天对象的id
+					},
+					GetChatWith:function(){//获取当前聊天对象的头像
+						for(let X = 0,Y = this.FriendList.length;X<Y;X++){
+							if(this.FriendList[X].UserId == this.ChatWith){
+								return this.FriendList[X].Headimage
+							}
+						}
+						return "HeadImage/AccountHead.png"
+					},
+					SendMessage:function(){//发送消息事件[接受者id][发送者id][发送消息]
+						socket.emit('Send',this.ChatWith+"|X|"+Userid+"|X|"+$("#Send_Frame").val());
+					},
 				}
 			})
 			
