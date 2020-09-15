@@ -21,23 +21,6 @@
 		<script type="text/javascript" src="/javascripts/socket.io.js"></script>
 		<!-- 导入依赖插件 -->
 		<script type="text/javascript" src="./plug/layer/layer.js"></script>
-		<script type="text/javascript">
-			class Slider{
-				//增加滑块对象的id
-				Slider_id = ""
-				Box = ""
-				
-				//构造方法,接受一个id
-				constructor(id) {
-					this.Slider_id = id;
-					
-					this.Box = $("#"+this.Slider_id)
-					this.Box.css("transform","margin-top 3s")
-					
-				}
-				
-			}
-		</script>
   </head>
   <body>
 	<!-- 主体内容 -->
@@ -109,6 +92,9 @@
 							<img :src="Headimage">
 							<span style="color: #fff;" v-text="name"></span>
 						</div>
+						<div id="MessageList" style="width: 100%;height: 88%;">
+							
+						</div>
 					</div>
 					<!-- 聊天输入框 -->
 					<div id="Send_Message">
@@ -138,6 +124,47 @@
 			let FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
 			let FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
 		
+		
+			class Slider{
+				//增加滑块对象的id
+				Slider_id = ""
+				Box = ""
+				
+				//滑块样式
+				slider_Style = {
+					"top" :"0px",
+					"left" : "100%",
+					"width" : "20px",
+					"height": "100%",
+					"margin-left" : "-20px",
+					"position" : "relative",
+					"border" : "1px solid red"
+				}
+				
+				//生成一个对应样式的div标签
+				SetCss=(Style_List)=>{
+					let style = "";
+					
+					for(let Styles in Style_List){
+						style += (Styles+":"+Style_List[Styles]+";")
+					}
+					
+					let unit = `<div style="${style}"></div>`
+					
+					return unit
+				}
+				
+				//构造方法,接受一个id
+				constructor(id) {
+					this.Slider_id = id;
+					
+					this.Box = $("#"+this.Slider_id)
+					this.Box.css("transform","margin-top 3s")
+					
+					this.Box.prepend(this.SetCss(this.slider_Style))
+				}
+				
+			}
 					
 			let MessageList = new Slider("MessageList")
 			

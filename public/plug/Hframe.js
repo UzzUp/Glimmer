@@ -17,7 +17,7 @@
 				//滑块点击位置
 				let slider_click_loca = 0
 				
-				//生成一个对应样式的canvas标签a10056
+				//生成一个对应样式的canvas标签
 				SetCss=(Style_List)=>{
 					let style = "";
 					
