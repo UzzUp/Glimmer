@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');//express用于解析文件流的中间�
 var createError = require('http-errors');
 var path = require('path');
 var http = require('http');
+var cors = require('cors');
 
 //导入session对象
 var session = require('express-session');
@@ -11,10 +12,11 @@ var cookieParser = require('cookie-parser');
 
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index');var usersRouter = require('./routes/users');
 
 var app = express();
+//配置同源策略解决方案
+app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -47,7 +47,7 @@ router.get('/', function(req, res, next) {
 							HeadImage:"./HeadImage/"+Image_URL,
 							username:req.session.Username,
 							name:req.session.name,
-							UserId:req.session.UserId,
+							UserId:req.session.Userid,
 							FriendList:Value,
 							FriendState:List_State_String
 						});

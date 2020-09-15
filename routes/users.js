@@ -25,7 +25,8 @@ io.Client_io.on('connection', function (socket) {
 				let Message_List = Send_Message.split("|X|")
 				let User_Socket = io.GetSocket(Message_List[0])
 				if(User_Socket!=null){
-					
+					console.log("发送消息。")
+					console.log([Message_List[1],Message_List[2]].join("|X|"))
 					User_Socket.Socket.emit('Send',{
 						Text:[Message_List[1],Message_List[2]].join("|X|")
 					})

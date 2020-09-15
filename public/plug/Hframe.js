@@ -1,7 +1,7 @@
 				
 				//绑定的div
-				let AddDiv = "Friend_List"
-				let AddSlider = "#Friend_List"
+				let AddDiv = "MessageList"
+				//let AddSlider = "#Friend_List"
 				
 				//盒子对象
 				let Box = $("#"+AddDiv)

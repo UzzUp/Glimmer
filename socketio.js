@@ -30,6 +30,8 @@ function AddSocket (UserId,Socket){
 		Seek_List.push(UserId)
 		Socket_List[UserId]={Socket:Socket}
 		Socket_List["type"]["Cnumber"] += 1
+	}else{
+		Socket_List[UserId]={Socket:Socket}
 	}
 }
 

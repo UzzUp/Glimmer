@@ -41,7 +41,8 @@ function FriendRls (Friend_List,ListFls,GetFls){
 							Friendrls.push({							
 								name : rls[i].name,
 								UserId : rls[i].id,
-								Headimage : ("HeadImage/"+rls[i].Headimage)
+								Headimage : ("HeadImage/"+rls[i].Headimage),
+								SNumber : 0
 							})
 						}
 					}
