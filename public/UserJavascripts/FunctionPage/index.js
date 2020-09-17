@@ -39,4 +39,3 @@
 					layer.style(index,{transition:"top 2s"})//设置移动方法
 					return index
 				}
-				

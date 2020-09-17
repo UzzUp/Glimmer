@@ -13,7 +13,7 @@
 		<!-- 导入自身依赖 -->
 		<link href="./UserStylesheets/FunctionPage.less" rel="stylesheet/less"/>
 		<script type="text/javascript" src="javascripts/less.min.js"></script>
-		<script type="text/javascript" src="./plug/vue.min.js"></script>
+		<script type="text/javascript" src="./plug/vue.min.js"></script>	
 		<!-- 导入必要依赖 -->
 		<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 		<script type="text/javascript" src="/javascripts/axios.min.js"></script>
@@ -78,10 +78,9 @@
 								<img class="F_State" :src="'./images/UIimage/'+Message.State">
 								<div class="USB_Border State_Frame">
 									<!-- 按钮UI与事件绑定 -->
-									<img class="State_UI " @click="OpenOnline(Message.UserId)"
-										src="./images/UIimage/OnlineUp.png">
-									<img class="State_UI " @click="" src="./images/UIimage/Means.png">
-									<img class="State_UI " @click="" src="./images/UIimage/Set.png">
+									<img class="State_UI " style="left: 20%;" @click="OpenOnline(Message.UserId)" src="./images/UIimage/OnlineUp.png">
+									<img class="State_UI " style="left: 40%;" @click="" src="./images/UIimage/Means.png">
+									<img class="State_UI " style="left: 60%;" @click="" src="./images/UIimage/Set.png">
 								</div>
 							</div>
 						</template>
@@ -92,8 +91,53 @@
 							<img :src="Headimage">
 							<span style="color: #fff;" v-text="name"></span>
 						</div>
-						<div id="MessageList" style="width: 100%;height: 88%;">
-							
+						<div id="MessageList" style="overflow: hidden; width: 100%;height: 88%;position: absolute;top: 12%;">
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffffff;margin-top: 10px;">
+								
+							</div>
+							<div style="width: 100%;height: 50px;background-color: #ffaa00;margin-top: 10px;"></div>
 						</div>
 					</div>
 					<!-- 聊天输入框 -->
@@ -107,7 +151,7 @@
 					</div>
 				</div>
 				<!--支持less,vue,jquery,axios,bootstrap,layer插件-->
-				<div id="Test-box" style="width: 100%;height: 100%;background-color: #003399;" v-else-if="ShowSelect == 'Test-box'">
+				<div id="Test-box" style="width: 100%;height: 100%;" v-else-if="ShowSelect == 'Test-box'">
 					
 				</div>
 			</div>
@@ -117,213 +161,45 @@
 	
 		
 		<!-- 放置ejs模板传来的值,供其他js文件使用 -->
-		<script async type="text/javascript">	
-			const Userid = "<%=UserId%>"//用户的id
-			let UserName = "<%=name%>"//用户的名称
-			let HeadImage = "<%=HeadImage%>"//头像路径
-			let FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
-			let FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
+		<!-- <script type="text/javascript" src="./plug/NewFrame.js"></script>			 -->
+		<script type="text/javascript">	
+			var Userid = "<%=UserId%>"//用户的id
+			var UserName = "<%=name%>"//用户的名称
+			var HeadImage = "<%=HeadImage	
+			%>"//头像路径
+			var FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
+			var FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
 		
-		
-			class Slider{
-				//增加滑块对象的id
-				Slider_id = ""
-				Box = ""
-				
-				//滑块样式
-				slider_Style = {
-					"top" :"0px",
-					"left" : "100%",
-					"width" : "20px",
-					"height": "100%",
-					"margin-left" : "-20px",
-					"position" : "relative",
-					"border" : "1px solid red"
-				}
-				
-				//生成一个对应样式的div标签
-				SetCss=(Style_List)=>{
-					let style = "";
-					
-					for(let Styles in Style_List){
-						style += (Styles+":"+Style_List[Styles]+";")
-					}
-					
-					let unit = `<div style="${style}"></div>`
-					
-					return unit
-				}
-				
-				//构造方法,接受一个id
-				constructor(id) {
-					this.Slider_id = id;
-					
-					this.Box = $("#"+this.Slider_id)
-					this.Box.css("transform","margin-top 3s")
-					
-					this.Box.prepend(this.SetCss(this.slider_Style))
-				}
-				
-			}
-					
-			let MessageList = new Slider("MessageList")
+			loadScript("./plug/NewFrame.js", function () {
+			      loadScript("./UserJavascripts/FunctionPage/Display.js", function () {
+			          loadScript("./UserJavascripts/FunctionPage/index.js", function () {
+										console.log("jq文件加载完成")
+			          });
+			      });
+			});
 			
-			let socket = io.connect('http://localhost:3100')
-			socket.emit('login',Userid);
-			
-			//Vue数据绑定
-			//用户信息框的动态绑定
-			let Message_frame = new Vue({
-				el:"#User_Message",
-				data:{
-					UserName : UserName,
-					HeadImage : HeadImage
-				},
-				computed:{
-					ShowName : function(){//设置显现的名字的样式
-						return (this.UserName).length>6?(this.UserName).substring(0,5)+"..":this.UserName
-					},
-					ShowHead : function(){//头像的显示路径
-						return this.HeadImage
-					}
-				}
-			})
-			
-			//功能显示窗口
-			let Show_frame = new Vue({
-				el:"#Function_Page",
-				data:{
-					ChatWith : "null",//聊天对象的ID
-					ShowSelect : "big-box",
-					FriendList : FriendList,
-					FriendState : FriendState,
-					Headimage : "HeadImage/AccountHead.png",
-					name : "无"
-				},
-				computed:{
-					//获取用户信息列表
-					GetFriendList:function(){
-						let Online = []//在线列表
-						let Out = []//离线列表
-						
-						//根据用户状态排序，并设置信息组
-						if(this.FriendState.length != 0){
-							for(let X = 0 ,Y = this.FriendList.length;X<Y;X++){
-								if(this.FriendState.indexOf(this.FriendList[X].UserId+"")!=-1){
-									this.FriendList[X].State = "Online.png"
-									Online.push(this.FriendList[X])
-								}else{
-									this.FriendList[X].State = "Out.png"
-									Out.push(this.FriendList[X])
+			function loadScript(url, callback) {
+				let _script = document.createElement("script");
+				_script.type="text/javascript";
+			         
+				if (_script.readyState) {
+						_script.onreadystatechange = function () {
+							if (_script.readyState == "loaded" || _script.readyState == "complete") {
+									_script.onreadystatechange = null;
+									callback();
 								}
-								
-								//当头像不存在时,使用默认头像代替
-								if(this.FriendList[X].Headimage=="null"){
-									this.FriendList[X].Headimage = "HeadImage/AccountHead.png"
-								}
-													
-							}
-						}
-						this.FriendList = JsonJoin(Online,Out)
-						//拼接两个列表并返回
-						return this.FriendList
-					},
-				},
-				methods:{
-					OpenOnline:function(UserId){//打开聊天框事件
-						this.ChatWith = UserId;//存储聊天对象的id
-						this.GetChatWith();
-					},
-					GetChatWith:function(){//获取当前聊天对象的信息
-						for(let X = 0,Y = this.FriendList.length;X<Y;X++){
-							if(this.FriendList[X].UserId == this.ChatWith){
-								this.Headimage = this.FriendList[X].Headimage;
-								this.name = this.FriendList[X].name;
-								break
-							}
-						}
-					},
-					SendMessage:function(){//发送消息事件[接受者id][发送者id][发送消息]
-						socket.emit('Send',this.ChatWith+"|X|"+Userid+"|X|"+$("#Send_Frame").val());
-					},
-				}
-			})
-			
-			//功能选择框的动态绑定
-			let Function_frame = new Vue({
-				el:"#Function",
-				data:{
-						Functions : [
-							{
-								Elid : "Main_Window",
-								name : "我的首页",
-								Icon : "./images/UIimage/home.png",
-								Hframe : "Main-box",
-								Select : false
-							},
-							{
-								Elid : "Friend_Window",
-								name : "好友信息",
-								Icon : "./images/UIimage/Friend_On.png",
-								Hframe : "big-box",								
-								Select : true								
-							},
-							{
-								Elid : "Game_Window",
-								name : "游戏列表",
-								Icon : "./images/UIimage/Game_On.png",
-								Hframe : "Test-box",								
-								Select : false
-							}
-						]
-				},
-				methods:{
-					//界面选择
-					Frame_Select : function(FrameName,index){
-						//设置唯一选中状态
-						for(let i = 0,y = this.Functions.length;i<y;i++){
-								if(i == index){
-									this.Functions[i].Select = true
-								}else{
-									this.Functions[i].Select = false
-								}
-						}
-						//设置显示的界面
-						Show_frame.ShowSelect = this.Functions[index].Hframe
-					},
-				}
-			})
-			
-			// 拼接json类型的对象
-			function JsonJoin(Json_One, Json_Tow) {
-			  let Join_Json = []
-				
-				for (let X = 0, Y = Json_One.length;X<Y;X++) {
-				  Join_Json.push(Json_One[X])
+						};
+				}else{
+						_script.onload = function () {
+								callback();
+						};
 				}
 				
-				for (let X = 0, Y = Json_Tow.length;X<Y;X++) {
-				  Join_Json.push(Json_Tow[X])
-				}
-				
-				return Join_Json
-			}
-			
-			//处理Socket连接事件
-			socket.on('Send',function (Send_Message) {//获取消息事件[发送者id][消息内容]
-				let Message_List = (Send_Message.Text).split("|X|")
-				let Send_Name = "匿名用户"
-				for(let X = 0 ,Y = Show_frame.FriendList.length;X<Y;X++){
-					if(Show_frame.FriendList[X].UserId == Message_List[0]){
-						Show_frame.FriendList[X].SNumber++
-						Send_Name = Show_frame.FriendList[X].name
-						LoginHint(Send_Name+":"+Message_List[1],()=>{})
-						break
-					}
-				}
-			})
+				_script.src=url;
+				document.getElementsByTagName("head")[0].appendChild(_script);
+			};
+
 		</script>
-		<script Defer='Defer' type="text/javascript" src="./plug/NewFrame.js"></script>		
-		<script Defer='Defer' type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>	
+		<script type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>	
 	</body>
 </html>
