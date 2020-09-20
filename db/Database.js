@@ -54,6 +54,20 @@ function FriendRls (Friend_List,ListFls,GetFls){
 		}
 }
 
+//获取与好友之间的聊天信息(id)
+function GetMessage (User,Friend,GetFls){
+	//获取组合识别码
+	let Seek = User>Friend?[Friend,User].join("[$F]"):[User,Friend].join("[$F]")
+	//获取指定信息
+	let Mysql_String = `select * from OnlineMS WHERE OnlineOBJ = '${Seek}'`
+		Connect.query(Mysql_String,function(err,rls){
+			if(rls.length == 0){
+				GetFls(null)
+			}else{
+				GetFls(rls)
+			}
+		})
+}
 
 //数据连接对象以及部分封装获取方法
 module.exports = {
@@ -61,5 +75,6 @@ module.exports = {
 	GetImage :GetImage,
 	MessgaeGet:MessgaeGet,
 	FriendRls:FriendRls,
-	Test_Open:Test_Open//测试开关
+	Test_Open:Test_Open,//测试开关
+	GetMessage:GetMessage
 }

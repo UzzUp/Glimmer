@@ -24,12 +24,18 @@ io.Client_io.on('connection', function (socket) {
 
 				let Message_List = Send_Message.split("|X|")
 				let User_Socket = io.GetSocket(Message_List[0])
+				console.log("接收的消息:"+Message_List)
 				if(User_Socket!=null){
 					console.log("发送消息。")
 					console.log([Message_List[1],Message_List[2]].join("|X|"))
+					
+					//空位置【mysql存放信息】
+					
 					User_Socket.Socket.emit('Send',{
 						Text:[Message_List[1],Message_List[2]].join("|X|")
 					})
+				}else{
+					console.log("发送消息对象。"+User_Socket+"不存在")
 				}
 			})
 			//用户端断开连接事件
@@ -43,6 +49,19 @@ io.Client_io.on('connection', function (socket) {
 router.get('/', function(req, res, next) {
 		res.render('FunctionPage',{HeadImage:"./HeadImage/AccountHead.png",username:"2497",name:"实验君"});
 });
+
+//获取用户聊天信息
+router.post('/GetMessage', function(req, res, next) {	
+	Database.GetMessage(req.body.User,req.body.Friend,function(rls){
+		if(rls == null){
+			//发送空指令
+			res.send(StateCode.State_Nothing)
+		}else{
+			//发送聊天消息结果集
+			res.send(rls[0].Message)
+		}
+	})
+})
 
 //验证用户账户可用性
 router.get('/AccountTest', function(req, res, next) {	

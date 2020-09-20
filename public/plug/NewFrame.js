@@ -8,6 +8,9 @@
 				slider_length = 0//滑块高度
 				proportion = 1//滑块比例
 				
+				//刷新事件
+				repaint = null
+				
 				//滑轮显示状态
 				OPenter = 1
 				OPout = 0.2
@@ -18,6 +21,7 @@
 					"left" : "100%",
 					"width" : "15px",
 					"height": "100%",
+					"z-index" : "1000",					
 					"margin-left" : "-15px",
 					"position" : "absolute",
 				}
@@ -26,6 +30,7 @@
 					"left" : "0px",					
 					"width" : "100%",
 					"height": "30px",
+					"z-index" : "1000",
 					"opacity" : this.OPout,
 					"position" : "absolute",
 					"border-radius" : "10px",
@@ -36,6 +41,7 @@
 					"height": "1px",
 					"border": "none",
 					"width" : "100%",
+					"z-index" : "1000",					
 					"background-color" : "#55ffff"
 				}
 				
@@ -116,6 +122,52 @@
 								}
 							},1000)
 						}).then(function(value){
+							
+							//增加刷新事件函数
+							SliderOBJ.repaint = ()=>{
+								
+								//获得滑块的对象
+								let LineElement = document.getElementById(SliderOBJ.Slider_id+"Line")
+								let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")
+								//获得最后一个单元
+								let Last_Unit = document.getElementById(SliderOBJ.Slider_id).lastElementChild
+								let Size_Unit = Last_Unit.offsetTop+Last_Unit.offsetHeight+SliderOBJ.Slider_Attr["ClickY"]*SliderOBJ.proportion
+								
+								if(Size_Unit!=SliderOBJ.block_length){
+									//获取元素起始位置
+									SliderOBJ.Slider_Attr["LineX"] = SliderOBJ.getElementLeft(LineElement);
+									SliderOBJ.Slider_Attr["LineY"] = SliderOBJ.getElementTop(LineElement);
+									//取得滑块位置总长度
+									SliderOBJ.Slider_Height = $("#"+SliderOBJ.Slider_id+"Line").height()
+									//获得界面总高度
+									SliderOBJ.block_length = Size_Unit
+									
+									SliderOBJ.proportion = parseFloat(SliderOBJ.block_length/SliderOBJ.Slider_Height)
+									//当比例小于1时，设置为1
+									if(SliderOBJ.proportion<1){
+										SliderOBJ.proportion  = 1
+									}
+									SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
+									//设置滑块高度
+									BlockElement.style.height = SliderOBJ.slider_length + "px"
+								}else{
+									SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
+									//设置滑块高度
+									BlockElement.style.height = SliderOBJ.slider_length + "px"
+								}
+							}
+							
+							//下方追踪事件
+							SliderOBJ.Onpart = ()=>{
+								SliderOBJ.Slider_Attr["ClickY"] = SliderOBJ.Slider_Height - SliderOBJ.slider_length
+								document.getElementById(SliderOBJ.Slider_id+"Block").style.top = SliderOBJ.Slider_Attr["ClickY"] + "px"
+								$("#"+SliderOBJ.Slider_id).children().get(1).style.marginTop = "-"+(SliderOBJ.Slider_Attr["ClickY"]*SliderOBJ.proportion)+"px"
+							}
+							
+							setInterval(function(){
+								SliderOBJ.repaint()
+							},100)
+							
 							//触摸绑定事件
 							$(document).delegate("#"+SliderOBJ.Slider_id+"Line","mouseenter",(event)=>{
 								document.getElementById(SliderOBJ.Slider_id+"Line").style.opacity = SliderOBJ.OPenter;
@@ -127,6 +179,7 @@
 							//滚轮绑定事件
 							let ShowTime = null;
 							$(document).delegate("#"+SliderOBJ.Slider_id,"mousewheel DOMMouseScroll",(event)=>{
+								
 								let delta = (event.originalEvent.wheelDelta && (event.originalEvent.wheelDelta > 0 ? 1 : -1))||(event.originalEvent.detail && (event.originalEvent.detail > 0 ? -1 : 1));    
 								let ExpecT = SliderOBJ.Slider_Attr["ClickY"]	
 								let Dome = 0;								
@@ -175,8 +228,20 @@
 								$("#"+SliderOBJ.Slider_id).children().get(1).style.marginTop = "-"+(SliderOBJ.Slider_Attr["ClickY"]*SliderOBJ.proportion)+"px"
 							});
 							
+							//绑定进入事件
+							$(document).delegate("#"+SliderOBJ.Slider_id,"mouseenter",(event)=>{
+								let YLoca = window.pageYOffset
+								$(document).bind("scroll",function (){
+									$(document).scrollTop(YLoca);
+								});
+							});
+							$(document).delegate("#"+SliderOBJ.Slider_id,"mouseleave",(event)=>{
+								$(document).unbind("scroll")
+							});
+							
 							//滑块绑定事件
 							$(document).delegate("#"+SliderOBJ.Slider_id+"Block","mousedown",(event)=>{
+								
 								let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")								
 								let Click = event.pageY - SliderOBJ.Slider_Attr["LineY"] - SliderOBJ.Slider_Attr["ClickY"]
 								SliderOBJ.Slider_Attr["ClickY"] = event.pageY - SliderOBJ.Slider_Attr["LineY"]
