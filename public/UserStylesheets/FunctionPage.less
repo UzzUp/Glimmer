@@ -11,6 +11,44 @@
 html,body{
 		height: 95%;
 }
+//---------------------------
+@keyframes show {
+  0% {
+    opacity: 0;
+    top: -120%;
+  }
+  100% {
+    opacity: 1;
+    top: -90%;
+  }
+}
+
+//layer弹窗自定义传入样式
+body .demo-class {
+  background-image: url("../images/BackImage/pc_bg.jpg");
+  background-size: cover;
+  background-position: center center;
+
+  .layui-layer-title {
+    background: none;
+    border-bottom: none;
+
+  }
+}
+
+body .demo-class1 {
+  background-image: url("../images/BackImage/pc_bg.jpg");
+  background-size: cover;
+
+  .layui-layer-title {
+    background: none;
+    border-bottom: none;
+
+  }
+}
+
+//---------------------------
+
 body {
 	background-image: url("../images/BackImage/pc_bg.jpg");
 	background-repeat: no-repeat;
@@ -64,7 +102,6 @@ body {
 			background:linear-gradient(to right,#419cfe,#25c6fe); 
 
 
-
 			border-radius: 10px;
 			box-shadow: 1px 2px 8px #999;
 			//字体显示
@@ -78,10 +115,6 @@ body {
 				transition: all 1s;
 				border-bottom: 1px #fff solid;				
 				
-				&:hover{
-					color: #5555ff;
-					border-radius: 0px 0px 10px 0px;	
-				}
 			}
 			
 			//头像框设置
@@ -118,7 +151,152 @@ body {
 					opacity: 0.4;
 				}
 			}
+			
+			//-------------------------
+			.c_weather {
+			  position: absolute;
+			  right: -3px;
+			  bottom: 0;
+			  width: 40px;
+			
+			
+			  &:hover .c_weatherBox {
+			    display: block;
+			    animation: show .6s;
+			    opacity: 1;
+			  }
+			
+			  .c_lei {
+			    background-image: url("../images/UIimage/lei.gif");
+			  }
+			
+			  .c_sunny {
+			    background-image: url("../images/UIimage/sunny.gif");
+			  }
+			
+			  .c_rain {
+			    background-image: url("../images/UIimage/rain.gif");
+			  }
+			
+			  .c_cloud {
+			    background-image: url("../images/UIimage/cloud.gif");
+			  }
+			
+			  .c_yin {
+			    background-image: url("../images/UIimage/yin.jpg");
+			  }
+			
+			  .c_snow {
+			    background-image: url("../images/UIimage/snow.jpg");
+			  }
+			
+			  .c_weatherBox {
+			    display: none;
+			    opacity: 0;
+			    position: absolute;
+			    width: 240px;
+			    height: 250px;
+			    //border: 1px solid #0C0C0C;
+			    background-color: rgba(0, 0, 0, .6);
+			    //background-image: url("../images/UIimage/lei.gif");
+			    background-repeat: no-repeat;
+			    background-size: cover;
+			    right: -240px;
+			    top: -90%;
+			    z-index: 99;
+			    color: #fff;
+			    border-radius: 2px;
+			    font-size: 14px;
+			
+			    .c_w_set {
+			      position: absolute;
+			      top: 5px;
+			      right: 5px
+			    }
+			
+			    .c_search {
+			      position: absolute;
+			      top: 0;
+			      left: 0;
+			      width: 100%;
+			      height: 100%;
+			      background-color: rgba(0, 0, 0, .8);
+			
+			      .icon-qa-close {
+			        position: absolute;
+			        top: 3px;
+			        right: 7px;
+			        font-size: 25px;
+			        color: rgba(255, 255, 255, .2);
+			      }
+			
+			      p {
+			        text-align: center;
+			        margin-top: 10px;
+			
+			        input {
+			          width: 85%;
+			          border-radius: 3px;
+			          outline: none;
+			          border: 1px solid rgba(255, 255, 255, .5);
+			          background: none;
+			          margin: 20px 0;
+			          text-indent: 0.5em;
+			        }
+			
+			        button {
+			          background-color: rgba(255, 255, 255, .4);
+			          outline: none;
+			          border: none;
+			          width: 20%;
+			          height: 30px;
+			          border-radius: 3px;
+			          margin-top: 20px;
+			        }
+			
+			      }
+			    }
+			
+			    .weather_now {
+			      height: 55%;
+			      //border-bottom: 1px solid rgba(0, 0, 0, .1);
+			      border-bottom: 1px solid rgba(255, 255, 255, .5);
+			      box-shadow: 1px 1px 3px rgba(255, 255, 255, .3);
+			      padding: 10px 0 0 20px;
+			    }
+			
+			    .weather_list {
+			      .c_list {
+			        width: 80px;
+			        padding-top: 10px;
+			        font-size: 12px;
+			
+			        &:hover {
+			          background-color: rgba(0, 0, 0, .1);
+			        }
+			
+			        p {
+			          text-align: center;
+			          line-height: 13px;
+			
+			        }
+			      }
+			
+			
+			    }
+			
+			  }
+			}
+			
+			.iconfont {
+			  color: #fff;
+			  font-size: 30px;
+			}
+			//-------------------------
 		}
+		
+		
+		
 		//功能选择
 		#Function{
 			top: 25%;
@@ -127,6 +305,55 @@ body {
 			width: 100%;
 			overflow:hidden;
 			position: absolute;
+			
+			//-------------------------
+			//设置界面
+			.c_switch {
+			  position: fixed;
+			  top: 50%;
+			  left: 50%;
+			  width: 20%;
+			  margin-left: -10%;
+			  margin-top: -200px;
+			  height: 400px;
+			  background-color: #ccc;
+			  z-index: 9999;
+			  background-image: url("../images/BackImage/pc_bg.jpg");
+			  background-repeat: no-repeat;
+			  background-size: cover;
+			  background-position: center center;
+			  box-shadow: 1px 1px 10px #666;
+			  padding: 10px;
+			
+			  &:first-child p {
+			    margin-top: 30px;
+			  }
+			
+			  .c_close {
+			    font-size: 20px;
+			    color: #999;
+			    float: right;
+			  }
+			
+			  p {
+			    display: flex;
+			    //background-color: #00B7FF;
+			    align-content: center;
+			    width: 80%;
+			    margin: 10px auto;
+			    padding-bottom: 10px;
+			    border-bottom: 1px solid #f0f0f0;
+			
+			    input {
+			      width: 20px;
+			      height: 20px;
+			      margin: 0 20px;
+			    }
+			  }
+			
+			}
+			//-------------------------
+			
 			//功能选择按钮样式与动画
 			.Select_Button{
 				position: relative;
@@ -144,6 +371,42 @@ body {
 				transform: scale(1.1);
 				box-shadow: 1px 2px 8px rgb(117, 167, 214);
 			}
+			
+			//---------------------------
+			.c_box {
+			  position: absolute;
+			  bottom: 20px;
+			  left: 10px;
+			
+			  .dropdown-menu li > a {
+			    position: relative;
+			    padding-left: 40px;
+			
+			    img {
+			      position: absolute;
+			      top: 3px;
+			      left: 10px;
+			    }
+			  }
+			
+			
+			}
+			
+			
+			.c_setup {
+			  width: 30px;
+			  height: 30px;
+			  // position: absolute;
+			  // left: 20px;
+			  // bottom: 20px;
+			  transition: all 1s;
+			}
+			
+			.c_setup:hover {
+			  transform-origin: center center;
+			  transform: rotate(360deg);
+			}
+			//---------------------------
 		}
 	}
 	//功能显示页面

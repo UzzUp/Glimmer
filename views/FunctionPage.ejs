@@ -12,6 +12,7 @@
 			
 		<!-- 导入自身依赖 -->
 		<link href="./UserStylesheets/FunctionPage.less" rel="stylesheet/less"/>
+    <link rel="stylesheet" href="./font_weather/iconfont.css"/>
 		<script type="text/javascript" src="javascripts/less.min.js"></script>
 		<script type="text/javascript" src="./plug/vue.min.js"></script>	
 		<!-- 导入必要依赖 -->
@@ -20,6 +21,7 @@
 		<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/javascripts/socket.io.js"></script>
 		<!-- 导入依赖插件 -->
+		
 		<script type="text/javascript" src="./plug/layer/layer.js"></script>
   </head>
   <body>
@@ -48,9 +50,85 @@
 					</div>
 					<!-- 用户名称 -->
 					<font size="3" style="color: #fff;">{{ShowName}}</font>
+					<div style="width: 50px;height: 50px;" class="c_weather">
+					    <div id="c_s_icon" v-if="weatherList[0]" class="iconfont"
+					         :class="getWeatherType(weatherList[0].text_day)">
+					        <!--天气盒子-->
+					        <div class="c_weatherBox" :class="c_bg(weatherList[0].text_day)">
+					            <!--天气盒子设置按钮-->
+					            <span class="c_w_set" @click="cityShow=!cityShow">
+					        <img src="./images/UIimage/Set.png" width="25" height="25" alt="">
+					    </span>
+					            <!--城市替换界面-->
+					            <div class="c_search" v-if="cityShow">
+					                <span class="iconfont icon-qa-close" @click="cityShow=!cityShow"></span>
+					                <p style="text-align: left;margin-left: 10px">设置</p>
+					                <p><input id="c_cityname" type="text" autocomplete="off" @keyup.enter="changeCity"
+					                          value=""
+					                          placeholder="输入需要显示天气的城市"
+					                          v-model="cityName">
+					                </p>
+					                <p style="padding-left: 20px;text-align: left" v-show="cityName!=''">
+					                    <span>你输入的城市为：</span>{{cityName}} <br>
+					                    <span>确认吗？</span>
+					                </p>
+					                <p>
+					                    <button class="c_addCity" @click="changeCity">确认
+					                    </button>
+					                </p>
+					            </div>
+					            <!--今日天气-->
+					            <div class="weather_now">
+					                <div class="info_type">
+					                    <b style="font-size: 28px;font-weight: 400">
+					                        <!--{{(parseFloat(weatherList[0].low)+parseFloat(weatherList[0].high))/2}}-->
+					                        {{c_wendu}}
+					                        <b style="font-size: 20px;font-weight: 400"> ℃</b>
+					                    </b>
+					                </div>
+					                <div class="c_city">
+					                    <span>{{city}}</span>
+					                </div>
+					                <div class="info_temp">
+					                    <span>{{weatherList[0].text_day}}</span>
+					                    <span v-if="weatherList[0].wind_direction==='无持续风向'">{{weatherList[0].wind_direction}}</span>
+					                    <span v-else>{{weatherList[0].wind_direction}}风</span>
+					                </div>
+					                <!--<div>降雨量：{{weatherList[0].rainfall}}</div>-->
+					                <div style="font-size: 10px;margin:7px 10px 0 0;">小提示：{{c_ganmao}}</div>
+					            </div>
+					
+					            <!--今、明、后 天气-->
+					            <div class="weather_list">
+					                <div class="c_list" style="float: left" v-for="(item,index) in weatherList">
+					                    <p v-if="index==0">今天</p>
+					                    <p v-if="index==1">明天</p>
+					                    <p v-if="index==2">后天</p>
+					                    <p>
+					                        <span>{{item.low}}℃/</span>
+					                        <span>{{item.high}}℃</span>
+					                    </p>
+					                    <p style="margin-top: 20px">
+					                        <span class="iconfont" :class="getWeatherType(item.text_day)"></span>
+					                    </p>
+					
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+					</div>
+					
 				</div>
 				<!-- 功能列表 -->
 				<div id="Function">
+					<div class="c_switch" style="display: none;" v-show="c_setshow">
+					    <span><img src="/images/logo/GlimmerIco.ico" width="25" height="25" style="margin:0 5px 4px 0;"
+					               alt="">设置</span>
+					    <span class="c_close iconfont icon-qa-close" @click="c_setshow=!c_setshow"></span>
+					    <form action="">
+					        <p><input class="c_tq" checked type="checkbox" value="3" name="s"><span>天气</span></p>
+					    </form>
+					</div>
 					<template v-for="(ListMessage,index) in Functions">
 						<div v-bind:id="ListMessage.Elid" @click="Frame_Select(ListMessage.Elid,index)"
 							class="Select_Button S_Border">
@@ -60,6 +138,29 @@
 								style="right: 0; bottom: 0;position: absolute;" />
 						</div>
 					</template>
+					<div class="dropup c_box">
+					    <div class="c_setup dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown"
+					         aria-haspopup="true" aria-expanded="false">
+					        <svg t="1600168823325" class="icon" viewBox="0 0 1024 1024" version="1.1"
+					             xmlns="http://www.w3.org/2000/svg" p-id="4172" width="30" height="30">
+					            <path
+					                    d="M881 512c0-52.4 32.9-96.8 79-114.5-11-43.2-28-83.9-50.2-121.3C864.6 296.3 810 288.1 773 251c-37-37-45.2-91.7-25.1-136.8C710.4 92 669.7 75 626.5 64c-17.8 46.1-62.2 79-114.5 79-52.4 0-96.8-32.9-114.5-79-43.2 11-83.9 28-121.3 50.2 20.1 45.2 11.9 99.8-25.1 136.8-37 37-91.7 45.2-136.8 25.2C92 313.6 75 354.3 64 397.5c46.1 17.8 79 62.2 79 114.5 0 52.4-32.9 96.8-79 114.5 11 43.2 28 83.9 50.2 121.3C159.4 727.7 214 735.9 251 773c37 37 45.2 91.7 25.1 136.8C313.6 932 354.3 949 397.5 960c17.8-46.1 62.2-79 114.5-79 52.4 0 96.8 32.9 114.5 79 43.2-11 83.9-28 121.3-50.2-20.1-45.2-11.9-99.8 25.1-136.8 37-37 91.7-45.2 136.8-25.2C932 710.4 949 669.7 960 626.5c-46.1-17.7-79-62.1-79-114.5zM512 635c-67.9 0-123-55.1-123-123s55.1-123 123-123 123 55.1 123 123-55.1 123-123 123z"
+					                    fill="#1296DB" p-id="4173"></path>
+					        </svg>
+					    </div>
+					    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+					        <li><a href="javascript:;">帮助</a></li>
+					        <li><a href="javascript:;" @click="c_update">升级</a></li>
+					        <li><a href="javascript:;" @click="c_set">设置</a></li>
+					        <li><a href="javascript:;" @click="c_theme">装扮</a></li>
+					        <li><a href="javascript:;" @click="c_about">关于微光</a></li>
+					        <li role="separator" class="divider"></li>
+					        <li class="c_change"><a href="javascript:;">切换账号</a></li>
+					        <li class="c_exit"><a href="javascript:;">
+									<img src="./images/UIimage/exit.png" width="20" height="20" alt="">退出</a>
+					        </li>
+					    </ul>
+					</div>
 				</div>
 			</div>
 			<div id="Function_Page" class="col-md-8 col-md-push-1 USB_Border">

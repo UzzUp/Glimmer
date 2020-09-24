@@ -36,6 +36,14 @@ function AddSocket (UserId,Socket){
 		//Socket_List[UserId]={Socket:Socket}
 	}
 }
+//在Array的原型链中添加删除方法
+function remove (array,val) {
+	var index = array.indexOf(val);
+	if (index > -1) {
+		array.splice(index, 1);
+	}
+	return array
+}
 
 //通知所有好友
 function NoticeFriend (UserId,FriendState){
@@ -51,5 +59,5 @@ module.exports = {
 		Client_io : Client_io,
 		GetSocket : GetSocket,
 		AddSocket : AddSocket,
-		NoticeFriend : NoticeFriend
+		NoticeFriend : NoticeFriend,
 };

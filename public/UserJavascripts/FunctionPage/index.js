@@ -39,3 +39,34 @@
 					layer.style(index,{transition:"top 2s"})//设置移动方法
 					return index
 				}
+				
+				//设置退出切换事件
+				$(".c_exit").click(function () {
+				    axios.post('users/Logout').then(resp => {
+							window.location.href = "https://www.baidu.com/";
+							window.close();
+				    }).catch(err => {
+							
+				    })	
+				})
+				$(".c_change").click(function () {
+				    axios.post('users/Logout').then(resp => {
+							window.location.reload()
+				    }).catch(err => {
+							
+				    })
+				})
+				
+				//天气隐藏与显示设置
+				$(window).load(function () {
+				    $("input[name='s']").each(function () {
+				        var sweather = $(this);
+				        sweather.click(function () {
+				            if ($(".c_tq").prop("checked") == true) {
+				                $("#c_s_icon").show()
+				            } else {
+				                $("#c_s_icon").hide()
+				            }
+				        })
+				    })
+				})

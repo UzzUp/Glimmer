@@ -1,0 +1,135 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2943302",
+      "name": "天气-未知天气",
+      "font_class": "weizhitianqi",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "4925462",
+      "name": "开关-开",
+      "font_class": "kaiguan-kai",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "4925963",
+      "name": "开关-关",
+      "font_class": "kaiguan-guan",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "8053795",
+      "name": "d4-阵雨",
+      "font_class": "d-zhenyu",
+      "unicode": "e8a9",
+      "unicode_decimal": 59561
+    },
+    {
+      "icon_id": "8053803",
+      "name": "d15-小雪",
+      "font_class": "d-xiaoxue",
+      "unicode": "e8ac",
+      "unicode_decimal": 59564
+    },
+    {
+      "icon_id": "8053805",
+      "name": "d5-雷阵雨",
+      "font_class": "d-leizhenyu",
+      "unicode": "e8ad",
+      "unicode_decimal": 59565
+    },
+    {
+      "icon_id": "8053807",
+      "name": "d11-暴雨",
+      "font_class": "d-baoyu",
+      "unicode": "e8ae",
+      "unicode_decimal": 59566
+    },
+    {
+      "icon_id": "8053811",
+      "name": "d10-大雨",
+      "font_class": "d-dayu",
+      "unicode": "e8ab",
+      "unicode_decimal": 59563
+    },
+    {
+      "icon_id": "8053814",
+      "name": "d2-多云",
+      "font_class": "d-duoyun",
+      "unicode": "e8af",
+      "unicode_decimal": 59567
+    },
+    {
+      "icon_id": "8053821",
+      "name": "d8-小雨",
+      "font_class": "d-xiaoyu",
+      "unicode": "e8b0",
+      "unicode_decimal": 59568
+    },
+    {
+      "icon_id": "8053825",
+      "name": "d9-中雨",
+      "font_class": "d-zhongyu",
+      "unicode": "e8b1",
+      "unicode_decimal": 59569
+    },
+    {
+      "icon_id": "8053828",
+      "name": "d3-阴",
+      "font_class": "d-yin",
+      "unicode": "e8b2",
+      "unicode_decimal": 59570
+    },
+    {
+      "icon_id": "8053833",
+      "name": "d12-大暴雨",
+      "font_class": "d-dabaoyu",
+      "unicode": "e8b3",
+      "unicode_decimal": 59571
+    },
+    {
+      "icon_id": "8053841",
+      "name": "d13-特大暴雨",
+      "font_class": "d-tedabaoyu",
+      "unicode": "e8b4",
+      "unicode_decimal": 59572
+    },
+    {
+      "icon_id": "8053842",
+      "name": "d16-中雪",
+      "font_class": "d-zhongxue",
+      "unicode": "e8b5",
+      "unicode_decimal": 59573
+    },
+    {
+      "icon_id": "8053845",
+      "name": "d1-晴",
+      "font_class": "d-qing",
+      "unicode": "e8b6",
+      "unicode_decimal": 59574
+    },
+    {
+      "icon_id": "8053847",
+      "name": "d17-大雪",
+      "font_class": "d-daxue",
+      "unicode": "e8b7",
+      "unicode_decimal": 59575
+    },
+    {
+      "icon_id": "10471155",
+      "name": "取消",
+      "font_class": "qa-close",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    }
+  ]
+}

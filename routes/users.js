@@ -280,6 +280,12 @@ router.post('/Login', function(req, res, next) {
 	
 });
 
+//删除指定用户持久化信息
+router.post('/Logout', function(req, res, next) {
+	//删除session对象
+	req.session.destroy()
+	res.send(StateCode.State_Permit)
+});
 
 //请求服务页面请求
 
