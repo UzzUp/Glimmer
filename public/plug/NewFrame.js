@@ -8,12 +8,11 @@
 				slider_length = 0//滑块高度
 				proportion = 1//滑块比例
 				
-				//刷新事件
-				repaint = null
+				Other = 0//冗余的值
 				
 				//滑轮显示状态
-				OPenter = 1
-				OPout = 0.2
+				OPenter = 0.6
+				OPout = 0.1
 				
 				//滑块样式
 				slider_Style1 = {
@@ -22,6 +21,7 @@
 					"width" : "15px",
 					"height": "100%",
 					"z-index" : "1000",					
+					"opacity" : this.OPout,
 					"margin-left" : "-15px",
 					"position" : "absolute",
 				}
@@ -31,7 +31,6 @@
 					"width" : "100%",
 					"height": "30px",
 					"z-index" : "1000",
-					"opacity" : this.OPout,
 					"position" : "absolute",
 					"border-radius" : "10px",
 					"background-color" : "#11a4ff"
@@ -74,15 +73,25 @@
 				
 				
 				//构造方法,接受一个id
-				constructor(id) {
+				constructor(id,Other) {
+						//存储参数信息
 						this.Slider_id = id;
+						if(arguments.length==2){
+							this.Other = Other
+						}
+						
 						this.Box = $("#"+this.Slider_id)
 						let SliderOBJ = this
 						
 						new Promise(function(resolve,reject){
 							
 							SliderOBJ.Box.css("transform","all 3s")
-							SliderOBJ.Box.prepend(SliderOBJ.SetCss(SliderOBJ.slider_Style1,SliderOBJ.slider_Style2,SliderOBJ.slider_Style3))
+							
+							//判断对象是否存在
+							if($("#"+SliderOBJ.Slider_id+"Line").length == 0){
+								SliderOBJ.Box.prepend(SliderOBJ.SetCss(SliderOBJ.slider_Style1,SliderOBJ.slider_Style2,SliderOBJ.slider_Style3))
+							}
+							
 							resolve("");
 						}).then(function(value){
 							
@@ -90,11 +99,11 @@
 								//获得滑块的对象
 								let LineElement = document.getElementById(SliderOBJ.Slider_id+"Line")
 								let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")
-								//获得最后一个单元
-								let Last_Unit = document.getElementById(SliderOBJ.Slider_id).lastElementChild
 								
 								if(SliderOBJ.getElementLeft(LineElement)+""!="0"){
 									if(SliderOBJ.getElementLeft(BlockElement)+""!="0"){
+										//获得最后一个单元
+										let Last_Unit = document.getElementById(SliderOBJ.Slider_id).lastElementChild
 										
 										//获取元素起始位置
 										SliderOBJ.Slider_Attr["LineX"] = SliderOBJ.getElementLeft(LineElement);
@@ -106,8 +115,41 @@
 										//取得滑块位置总长度
 										SliderOBJ.Slider_Height = $("#"+SliderOBJ.Slider_id+"Line").height()
 										//获得界面总高度
-										SliderOBJ.block_length = Last_Unit.offsetTop+Last_Unit.offsetHeight
-										
+										SliderOBJ.block_length = Last_Unit.offsetTop+Last_Unit.offsetHeight + SliderOBJ.Other
+										SliderOBJ.proportion = parseFloat(SliderOBJ.block_length/SliderOBJ.Slider_Height)
+										//当比例小于1时，设置为1
+										if(SliderOBJ.proportion<1){
+											SliderOBJ.proportion  = 1
+										}
+										SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
+										//设置滑块高度
+										BlockElement.style.height = SliderOBJ.slider_length + "px"
+										clearInterval(Get)
+									}
+								}
+							},1000)
+							
+						}).then(function(value){
+							//增加刷新事件函数
+							SliderOBJ.repaint = ()=>{
+								if($("#"+SliderOBJ.Slider_id).length>0){
+
+									//获得滑块的对象
+									let LineElement = document.getElementById(SliderOBJ.Slider_id+"Line")
+									let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")
+									//获得最后一个单元
+									let Last_Unit = document.getElementById(SliderOBJ.Slider_id).lastElementChild
+									let Size_Unit = Last_Unit.offsetTop+Last_Unit.offsetHeight+SliderOBJ.Slider_Attr["ClickY"]*SliderOBJ.proportion + SliderOBJ.Other
+									
+									if(Size_Unit!=SliderOBJ.block_length){
+										//获取元素起始位置
+										SliderOBJ.Slider_Attr["LineX"] = SliderOBJ.getElementLeft(LineElement);
+										SliderOBJ.Slider_Attr["LineY"] = SliderOBJ.getElementTop(LineElement);
+										//取得滑块位置总长度
+										SliderOBJ.Slider_Height = $("#"+SliderOBJ.Slider_id+"Line").height()
+										//获得界面总高度
+										SliderOBJ.block_length = Size_Unit
+
 										SliderOBJ.proportion = parseFloat(SliderOBJ.block_length/SliderOBJ.Slider_Height)
 										//当比例小于1时，设置为1
 										if(SliderOBJ.proportion<1){
@@ -117,43 +159,11 @@
 										//设置滑块高度
 										BlockElement.style.height = SliderOBJ.slider_length + "px"
 										
-										clearInterval(Get)
+									}else{
+										SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
+										//设置滑块高度
+										BlockElement.style.height = SliderOBJ.slider_length + "px"
 									}
-								}
-							},1000)
-						}).then(function(value){
-							
-							//增加刷新事件函数
-							SliderOBJ.repaint = ()=>{
-								
-								//获得滑块的对象
-								let LineElement = document.getElementById(SliderOBJ.Slider_id+"Line")
-								let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")
-								//获得最后一个单元
-								let Last_Unit = document.getElementById(SliderOBJ.Slider_id).lastElementChild
-								let Size_Unit = Last_Unit.offsetTop+Last_Unit.offsetHeight+SliderOBJ.Slider_Attr["ClickY"]*SliderOBJ.proportion
-								
-								if(Size_Unit!=SliderOBJ.block_length){
-									//获取元素起始位置
-									SliderOBJ.Slider_Attr["LineX"] = SliderOBJ.getElementLeft(LineElement);
-									SliderOBJ.Slider_Attr["LineY"] = SliderOBJ.getElementTop(LineElement);
-									//取得滑块位置总长度
-									SliderOBJ.Slider_Height = $("#"+SliderOBJ.Slider_id+"Line").height()
-									//获得界面总高度
-									SliderOBJ.block_length = Size_Unit
-									
-									SliderOBJ.proportion = parseFloat(SliderOBJ.block_length/SliderOBJ.Slider_Height)
-									//当比例小于1时，设置为1
-									if(SliderOBJ.proportion<1){
-										SliderOBJ.proportion  = 1
-									}
-									SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
-									//设置滑块高度
-									BlockElement.style.height = SliderOBJ.slider_length + "px"
-								}else{
-									SliderOBJ.slider_length = parseFloat(SliderOBJ.Slider_Height/SliderOBJ.proportion)
-									//设置滑块高度
-									BlockElement.style.height = SliderOBJ.slider_length + "px"
 								}
 							}
 							
@@ -239,15 +249,12 @@
 								$(document).unbind("scroll")
 							});
 							
-							//滑块绑定事件
+							//点击绑定事件
 							$(document).delegate("#"+SliderOBJ.Slider_id+"Block","mousedown",(event)=>{
 								
 								let BlockElement = document.getElementById(SliderOBJ.Slider_id+"Block")								
 								let Click = event.pageY - SliderOBJ.Slider_Attr["LineY"] - SliderOBJ.Slider_Attr["ClickY"]
-								SliderOBJ.Slider_Attr["ClickY"] = event.pageY - SliderOBJ.Slider_Attr["LineY"]
 								
-								
-								// - SliderOBJ.Slider_Attr["LineY"]
 								//页面配合设置
 								$("body").css("-moz-user-select","none")
 								$("body").css("-khtml-user-select","none")
@@ -256,6 +263,7 @@
 								
 								
 								$("html").mousemove((event)=>{
+									console.log("事件2")
 									let ExpecT = event.pageY - SliderOBJ.Slider_Attr["LineY"] - Click		
 									let Dome = 0;
 									
@@ -304,6 +312,7 @@
 				
 				//获取指定组件的绝对位置
 				getElementLeft(element){
+					if(element != null){					
 				　	let actualLeft = element.offsetLeft;
 				　	let current = element.offsetParent;
 				
@@ -313,16 +322,21 @@
 				　	}
 				
 				　	return actualLeft;
+					}
+					return 0;
 				}	
 				getElementTop(element){
-				　	let actualTop = element.offsetTop;
-				　	let current = element.offsetParent;
-				
-				　	while (current !== null){
-				　　　	actualTop += current.offsetTop;
-				　　　	current = current.offsetParent;
-				　	}
-				
-				　	return actualTop;
+					if(element != null){
+						let actualTop = element.offsetTop;
+						　	let current = element.offsetParent;
+						
+						　	while (current !== null){
+						　　　	actualTop += current.offsetTop;
+						　　　	current = current.offsetParent;
+						　	}
+						
+						 return actualTop;
+					}
+					return 0;
 				}
 			}

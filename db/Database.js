@@ -69,6 +69,38 @@ function GetMessage (User,Friend,GetFls){
 		})
 }
 
+//获取用户个人信息
+function GetNews (Getid,GetFls){
+	let Mysql_String = `select * from usermessage WHERE id = ${Getid}`
+		Connect.query(Mysql_String,function(err,rls){
+			if(rls.length == 0){
+				GetFls(null)
+			}else{
+				GetFls(rls)
+			}
+		})
+}
+
+//设置用户个人信息
+function SetNews (Setid,SetContext,SetFls){
+	let ContextList = []
+	let ContextMysql = ""
+	//循环添加
+	for(let Context in SetContext){
+		if(Context != 'Username'){
+			ContextList.push(Context + "='" + SetContext[Context]+"'")
+		}
+	}
+	ContextMysql = ContextList.join(",")
+	
+	let Mysql_String = `update usermessage set ${ContextMysql} where id = ${Setid}`
+		Connect.query(Mysql_String,function(err,rls){
+			if(err) console.log(err)
+			console.log(rls)
+			SetFls(rls)
+		})
+}
+
 //数据连接对象以及部分封装获取方法
 module.exports = {
 	Connect : Connect,
@@ -76,5 +108,7 @@ module.exports = {
 	MessgaeGet:MessgaeGet,
 	FriendRls:FriendRls,
 	Test_Open:Test_Open,//测试开关
-	GetMessage:GetMessage
+	GetMessage:GetMessage,
+	GetNews:GetNews,
+	SetNews:SetNews
 }

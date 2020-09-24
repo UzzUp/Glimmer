@@ -70,12 +70,12 @@
 				<!-- 好友单元 -->
 				<div id="big-box" v-else-if="ShowSelect == 'big-box'">
 					<!-- 根据好友数量设置好友单元数量 -->
-					<div id="Friend_List">
-						<template v-for="Message in GetFriendList">
+					<div id="Friend_List" style="background-color: white">
+						<template v-for="(Message,index) in GetFriendList">
 							<div class="Unit-shows">
-								<img class="F_Headimage" :src="Message.Headimage">
-								<font>{{Message.name.length>3?Message.name.substring(0,3)+"..":Message.name}}</font>
-								<img class="F_State" :src="'./images/UIimage/'+Message.State">
+								<img class="F_Headimage" :class="{'HeadimageOut':Message.State}" :src="Message.Headimage">
+								<font>{{Message.name.length>5?Message.name.substring(0,5)+"..":Message.name}}</font>
+								<span class="badge F_Number" v-show="Message.NewMessage">{{Message.SNumber>99?"99+":Message.SNumber}}</span>
 								<div class="USB_Border State_Frame">
 									<!-- 按钮UI与事件绑定 -->
 									<img class="State_UI " style="left: 20%;" @click="OpenOnline(Message.UserId)" src="./images/UIimage/OnlineUp.png">
@@ -88,7 +88,7 @@
 					<!-- 聊天信息显示框 -->
 					<div id="Friend_Message">
 						<div class="user_name">
-							<img style="border-radius: 10px;" :src="Headimage">
+							<img style="border-radius: 10px;background-color: white;" :src="Headimage">
 							<span style="color: #fff;" v-text="name"></span>
 						</div>
 						<div id="MessageList" style="overflow: hidden; width: 100%;height: 88%;position: absolute;top: 12%;">
@@ -101,12 +101,18 @@
 
 						</div>
 						<input id="Send_Button" @click="SendMessage()" class="btn btn-info" type="button"
-							value="发送(Ctrl+W)">
+							value="发送(Ctrl+X)">
 						<textarea id="Send_Frame"></textarea>
 					</div>
 				</div>
 				<!--支持less,vue,jquery,axios,bootstrap,layer插件-->
-				<div id="Test-box" style="width: 100%;height: 100%;" v-else-if="ShowSelect == 'Test-box'">
+				<div id="Game-box" style="width: 100%;height: 100%;background-color: white;" v-else-if="ShowSelect == 'Game-box'">
+					
+				</div>
+				<div id="User-box" style="width: 100%;height: 100%;background-color: white;" v-else-if="ShowSelect == 'User-box'">
+					
+				</div>
+				<div id="Forum-box" style="width: 100%;height: 100%;background-color: white;" v-else-if="ShowSelect == 'Forum-box'">
 					
 				</div>
 			</div>
@@ -124,23 +130,23 @@
 			var FriendList = JSON.parse('<%- JSON.stringify(FriendList)%>')//好友信息列表
 			var FriendState = "<%=FriendState%>".split("|X|")//好友在线状态
 		
-			//禁止页面滚轮
-			// document.documentElement.style.overflow='hidden';
-			// document.body.style.overflow='hidden';
 			
 			//与服务器进行socket连接
 			var socket = io.connect('http://127.0.0.1:3100')
-			socket.emit('login',Userid);
-			loadScript("./UserJavascripts/ClassFunction.js", function () {
-				loadScript("./plug/NewFrame.js", function () {
-							loadScript("./UserJavascripts/FunctionPage/Display.js", function () {
-									loadScript("./UserJavascripts/FunctionPage/index.js", function () {
-											console.log("jq文件加载完成")
-									});
-							});
+			socket.emit('login',{
+				Userid:Userid,
+				FriendState:FriendState,
 				});
-			});
+			//按序加载js文件
+			loadScript("./UserJavascripts/ClassFunction.js", function () {
+			loadScript("./plug/NewFrame.js", function () {
+			loadScript("./UserJavascripts/FunctionPage/Display.js", function () {
+			loadScript("./UserJavascripts/FunctionPage/index.js", function () {
+			loadScript("./UserJavascripts/FunctionPage/SocketEvent.js", function () {
+					console.log("jq文件加载完成")
+			});});});});});
 			
+			//动态加载js文件
 			function loadScript(url, callback) {
 				let _script = document.createElement("script");
 				_script.type="text/javascript";
@@ -161,7 +167,6 @@
 				_script.src=url;
 				document.getElementsByTagName("head")[0].appendChild(_script);
 			};
-
 		</script>
 		<script type="text/javascript" src="./UserJavascripts/FunctionPage/index.js"></script>	
 	</body>

@@ -37,8 +37,19 @@ function AddSocket (UserId,Socket){
 	}
 }
 
+//通知所有好友
+function NoticeFriend (UserId,FriendState){
+	for(let X = 0,Y = FriendState.length;X<Y;X++){
+		//发送在线消息
+		if(typeof Socket_List[FriendState[X]] != "undefined"){
+			Socket_List[FriendState[X]].Socket.emit('Online',UserId)
+		}
+	}
+}
+
 module.exports = {
 		Client_io : Client_io,
 		GetSocket : GetSocket,
 		AddSocket : AddSocket,
+		NoticeFriend : NoticeFriend
 };

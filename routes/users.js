@@ -12,28 +12,45 @@ let StateCode = require('../db/State_Code.js')
 let io = require('../socketio.js')
 
 io.Client_io.on('connection', function (socket) {
-			console.log("连接成功")
 			//登录事件
 			socket.on('login',function (obj) {
 				//增加Socket对象
-				io.AddSocket(obj,socket)
-				// io.GetSocket(obj)
+				io.AddSocket(obj.Userid,socket)
+				//向在线好友们发送上线提示
+				io.NoticeFriend(obj.Userid,obj.FriendState)
 			})
 			//发送事件
-			socket.on('Send',function (Send_Message) {//获取消息事件[接受者id][发送者id][发送消息]
+			socket.on('Send',function (Send_Message) {//获取消息事件[接受者id][发送者id][消息类型][发送消息]
 
 				let Message_List = Send_Message.split("|X|")
 				let User_Socket = io.GetSocket(Message_List[0])
-				console.log("接收的消息:"+Message_List)
 				if(User_Socket!=null){
-					console.log("发送消息。")
-					console.log([Message_List[1],Message_List[2]].join("|X|"))
-					
-					//空位置【mysql存放信息】
 					
 					User_Socket.Socket.emit('Send',{
-						Text:[Message_List[1],Message_List[2]].join("|X|")
+						Text:[Message_List[1],Message_List[2],Message_List[3]].join("|X|")
 					})
+					
+					//空位置【mysql存放信息】
+					let Seek = Message_List[1]>Message_List[0]?[Message_List[0],Message_List[1]].join("[$F]"):[Message_List[1],Message_List[0]].join("[$F]")
+					let listOn = `select 1 from onlinems where OnlineOBJ = '${Seek}' limit 1`
+					
+					
+					if(Message_List[2] == "USB"){
+						Database.Connect.query(listOn,function(err,rls){
+							let AddData = ([Message_List[1],Message_List[3]].join("|Y|"))+"|X|"
+							let AddUnit = `INSERT INTO onlinems (OnlineOBJ,Message) VALUES ('${Seek}','${AddData}')`
+							let AddMessage = `Update onlinems SET Message = CONCAT(Message,'${AddData}') where OnlineOBJ = '${Seek}'`
+							if(rls.length == 0){
+								Database.Connect.query(AddUnit,function(err,rls){
+									if(err) console.log(err)
+								})
+							}else{
+								Database.Connect.query(AddMessage,function(err,rls){
+									if(err) console.log(err)
+								})
+							}
+						})
+					}
 				}else{
 					console.log("发送消息对象。"+User_Socket+"不存在")
 				}
@@ -97,12 +114,14 @@ router.post('/headImage', function(req, res, next) {
 				let SetImageUrl = `./public/HeadImage/${SetImageName}`
 				
 				
-				//删除原先的图片
-				fs.unlink(SetDelete, function(err){
-					if(err){
-							console.log(err);
-					}
-				})
+				if((Mysql_Head.split("."))[0]!="AccountHead"){
+					//删除原先的图片
+					fs.unlink(SetDelete, function(err){
+						if(err){
+								console.log(err);
+						}
+					})
+				}
 				
 				//设置新头像图片路径
 				let Mysql_String = `UPDATE userlist SET Headimage="${SetImageName}" WHERE id="${req.session.Userid}"`
@@ -129,14 +148,33 @@ router.post('/headImage', function(req, res, next) {
 
 //注册请求
 router.post('/Register', function(req, res, next) {
-		let Mysql_String = `INSERT INTO userlist (id,Username,Password,name,Headimage) 
+	
+		let Mysql_String_User= `INSERT INTO userlist (id,Username,Password,name,Headimage,FriendList) 
 		VALUES 
-		(0,'${req.body.Account}','${req.body.Password}','${req.body.name}','AccountHead.png')`
-		//发送注册成功的信息
-		Database.Connect.query(Mysql_String,function(err,rls){
+		(0,'${req.body.Account}','${req.body.Password}','${req.body.name}','AccountHead.png','0')`
+		
+		//创建用户在线信息
+		Database.Connect.query(Mysql_String_User,function(err,rls){
 			if(err) console.log(err)
-			res.send(StateCode.State_Permit)
+			rls.insertId
+			//创建用户个人信息
+			let Mysql_String_MSG = `INSERT INTO usermessage (id,Sex,Present) VALUES (${rls.insertId},'${req.body.Sex}','这位腼腆的用户没有设置签名~~~')`
+			Database.Connect.query(Mysql_String_MSG,function(err,rls){
+				if(err) console.log(err)
+			})
+			
+			//空位置【mysql存放信息】
+			let Seek = [0,rls.insertId].join("[$F]")
+			let AddData = `0|Y|亲爱的用户，欢迎您使用Glimmer微光|X|0|Y|向我发送消息可以获取使用教程`
+			let AddUnit = `INSERT INTO onlinems (OnlineOBJ,Message) VALUES ('${Seek}','${AddData}')`
+			Database.Connect.query(AddUnit,function(err,rls){
+				if(err) console.log(err)
+			})
 		})
+		
+		
+		//发送注册成功的信息
+		res.send(StateCode.State_Permit)
 })
 
 //登录请求
@@ -203,7 +241,7 @@ router.post('/Login', function(req, res, next) {
 						//好友数量
 						let List_Number = List_Message.length;
 						//获取好友在线状态信息
-						let List_State = []
+						let List_State = [0]
 						
 						//获取好友登录状态时
 						req.sessionStore.all(function(err,sessions){
@@ -240,6 +278,24 @@ router.post('/Login', function(req, res, next) {
 	  console.log('reject:' + err);
 	});
 	
+});
+
+
+//请求服务页面请求
+
+//请求用户信息页面
+router.post('/UserMessage', function(req, res, next) {
+	Database.GetNews(req.session.Userid,(rls)=>{
+		res.render('./Brance/UserMessage',rls[0]);
+	})
+});
+
+//设置指定用户信息
+router.post('/SetUserMessage', function(req, res, next) {
+	//发送许可指令
+	res.send(StateCode.State_Permit)
+	//存储信息
+	Database.SetNews(req.session.Userid,req.body,(rls)=>{})
 });
 
 module.exports = router;

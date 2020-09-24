@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
 					//好友数量
 					let List_Number = List_Message.length;
 					//获取好友在线状态信息
-					let List_State = []
+					let List_State = [0]
 					
 					//获取好友登录状态时
 					req.sessionStore.all(function(err,sessions){

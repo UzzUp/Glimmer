@@ -1,0 +1,96 @@
+				<div id="z-UserMessage" style="height:100%;width:100%" v-if="Show_frame.ShowSelect == 'User-box'">
+					<div class="z-info-left">
+						<div class="z-info-leftImg">
+							<a class="z-info-font">
+								<img class="z-info-fontImg" src="./images/UIimage/衣服.png" >
+								<span>更换封面</span>
+							</a>
+							<img id="Back_Image" v-bind:src='BackImage' alt=""/>
+						</div>
+						<div class="z-info-leftInf">
+							<div class="z-info-leftHeadimg">
+								<img id="Head_Image" v-bind:src='HeadImage' style="width: 100%;height: 100%;" />
+							</div>
+							<div class="z-info-leftWord">
+								<h3 class="z-info-leftName">{{UserName}}</h3>
+								<p class="z-info-leftSign">{{UserSign}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="z-info-right" style="background: url(./BackImg/z-infoBack4.jpg) no-repeat 0 -75px;background-size: 100%;" v-if='zShow == 1'>
+						<div class="z-info-rightInf">
+							<p><i class="z-info-rightFont" style="background:url(./images/UIimage/昵称.png) no-repeat;background-size: 100%;"></i>{{UserName}}</p>
+							<p v-if='UserSex==1'><i class="z-info-rightFont" style="background:url(./images/UIimage/性别.png) no-repeat;background-size: 100%;"></i>男</p>
+							<p v-else-if='UserSex==2'><i class="z-info-rightFont" style="background:url(./images/UIimage/性别.png) no-repeat;background-size: 100%;"></i>女</p>
+							<p v-else><i class="z-info-rightFont" style="background:url(./images/UIimage/性别.png) no-repeat;background-size: 100%;"></i>保密</p>
+							<p><i class="z-info-rightFont" style="background:url(./images/UIimage/年龄.png) no-repeat;background-size: 100%;"></i>{{UserAge}}</p>
+							<p><i class="z-info-rightFont" style="background:url(./images/UIimage/手机.png) no-repeat;background-size: 100%;"></i>{{UserTel}}</p>
+							<p><i class="z-info-rightFont" style="background:url(./images/UIimage/邮箱.png) no-repeat;background-size: 100%;"></i>{{UserEmail}}</p>
+							<p><i class="z-info-rightFont" style="background:url(./images/UIimage/个性签名.png) no-repeat;background-size: 100%;"></i>{{UserSign}}</p>
+							<font @click='zShow=0' id="z-info-update">编辑资料</font>
+							<!-- href="javascript:void(0)" -->
+						</div>
+						<div class="z-info-rightBlog">
+							<i class="z-info-rightFont" style="background:url(./images/UIimage/动态.png) no-repeat;background-size: 100%;"></i>
+							<h3>{{BlogTitle}}</h3>
+							<p>{{BlogContent}}</p>
+							<i>{{BlogTime}}</i>
+						</div>
+					</div>
+					<!-- 编辑资料 -->
+					<div class="z-info-right2" v-else-if='zShow == 0'>
+						<form method="POST" onsubmit="return false" id="z-info-form" class="form-horizontal">
+							<div class="form-group">
+								<label for="z-info-inputName" class="col-sm-2 control-label">昵称</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="z-info-inputName" v-bind:value="UserName">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="z-info-inputSex" class="col-sm-2 control-label">性别</label>
+								<div id="z-info-inputSex" class="col-sm-10">
+									<input type="radio" name="z-info-userSex" @click="UserSex = 1" :checked="UserSex == 1"> 男
+									<input type="radio" name="z-info-userSex" @click="UserSex = 2" :checked="UserSex == 2"> 女
+									<input type="radio" name="z-info-userSex" @click="UserSex = 0" :checked="UserSex == 0"> 保密
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="z-info-inputAge" class="col-sm-2 control-label">年龄</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="z-info-inputAge" v-bind:value="UserAge">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="z-info-inputTel" class="col-sm-2 control-label">手机</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="z-info-inputTel" v-bind:value="UserTel">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="z-info-inputEmail" class="col-sm-2 control-label">邮箱</label>
+								<div class="col-sm-10">
+									<input type="email" class="form-control" id="z-info-inputEmail" v-bind:value="UserEmail">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="z-info-inputSign" class="col-sm-2 control-label">签名</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="z-info-inputSign" rows="2" style="resize:none;">{{UserSign}}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-5 col-sm-10">
+									<button id="Updata" @click="Updata()" type="submit" class="btn btn-primary">修改</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<script type="text/javascript" charset="utf-8">
+					var UserSign = "<%=Present%>" //用户个性签名
+					var UserSex = "<%=Sex%>".replace(/\b(0+)/gi,"") //用户性别
+					var UserAge = "<%=Age%>".replace(/\b(0+)/gi,"") //用户生日
+					var UserEmail = "<%=Email%>" //用户邮箱
+					var UserTel = "<%=Ophone%>".replace(/\b(0+)/gi,"") //用户手机号
+				</script>
+				<script  src="./UserJavascripts/FunctionPage/Brance/UserMessage.js" type="text/javascript" charset="utf-8"></script>
